@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Coffee Simulation.sln"
+    "dotnet.defaultSolution": "Coffee_SeniorProj.sln"
 }
