@@ -1,0 +1,455 @@
+fileFormatVersion: 2
+guid: 779e1826f98534c40b5e507a65cdf6f6
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -733600430465769879
+    second: different-scales-store-kitchen-vector-illustrations-set_0
+  - first:
+      213: 7248396573874938809
+    second: different-scales-store-kitchen-vector-illustrations-set_1
+  - first:
+      213: 8809642356268308749
+    second: different-scales-store-kitchen-vector-illustrations-set_2
+  - first:
+      213: 8524792221057338021
+    second: different-scales-store-kitchen-vector-illustrations-set_3
+  - first:
+      213: -3568529775359133595
+    second: different-scales-store-kitchen-vector-illustrations-set_4
+  - first:
+      213: -8641419164938178163
+    second: different-scales-store-kitchen-vector-illustrations-set_5
+  - first:
+      213: -1046717185619014742
+    second: different-scales-store-kitchen-vector-illustrations-set_6
+  - first:
+      213: -7487914136630488235
+    second: different-scales-store-kitchen-vector-illustrations-set_7
+  - first:
+      213: 1273059311570070476
+    second: different-scales-store-kitchen-vector-illustrations-set_8
+  - first:
+      213: -6828327452564119054
+    second: different-scales-store-kitchen-vector-illustrations-set_9
+  - first:
+      213: 5922179104676448838
+    second: different-scales-store-kitchen-vector-illustrations-set_10
+  - first:
+      213: 8737305969182604758
+    second: different-scales-store-kitchen-vector-illustrations-set_11
+  - first:
+      213: 2468398416298349618
+    second: different-scales-store-kitchen-vector-illustrations-set_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_0
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 965
+        width: 279
+        height: 408
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96e93079b4ab1d5f0800000000000000
+      internalID: -733600430465769879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_1
+      rect:
+        serializedVersion: 2
+        x: 539
+        y: 929
+        width: 68
+        height: 454
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b369f0c74a779460800000000000000
+      internalID: 7248396573874938809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_2
+      rect:
+        serializedVersion: 2
+        x: 634
+        y: 1062
+        width: 565
+        height: 327
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d099b9b2c03224a70800000000000000
+      internalID: 8809642356268308749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_3
+      rect:
+        serializedVersion: 2
+        x: 1218
+        y: 1005
+        width: 296
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5aac228db552e4670800000000000000
+      internalID: 8524792221057338021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_4
+      rect:
+        serializedVersion: 2
+        x: 1563
+        y: 1005
+        width: 261
+        height: 389
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 568705183190a7ec0800000000000000
+      internalID: -3568529775359133595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_5
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 728
+        width: 424
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d817b9ebd03831880800000000000000
+      internalID: -8641419164938178163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_6
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 393
+        width: 331
+        height: 543
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aabc1e2f3405971f0800000000000000
+      internalID: -1046717185619014742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_7
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 419
+        width: 538
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5539381f3c5951890800000000000000
+      internalID: -7487914136630488235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_8
+      rect:
+        serializedVersion: 2
+        x: 1359
+        y: 319
+        width: 510
+        height: 562
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccb232ce2b0daa110800000000000000
+      internalID: 1273059311570070476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_9
+      rect:
+        serializedVersion: 2
+        x: 1506
+        y: 519
+        width: 366
+        height: 402
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f12ed32c58ec31a0800000000000000
+      internalID: -6828327452564119054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_10
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 117
+        width: 520
+        height: 542
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64a0b76c48ecf2250800000000000000
+      internalID: 5922179104676448838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_11
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 117
+        width: 568
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dd770b9c75214970800000000000000
+      internalID: 8737305969182604758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: different-scales-store-kitchen-vector-illustrations-set_12
+      rect:
+        serializedVersion: 2
+        x: 1376
+        y: 117
+        width: 500
+        height: 156
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 234999f0843814220800000000000000
+      internalID: 2468398416298349618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 44ddf9e17697fbd4598e099c60cd2ed3
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      different-scales-store-kitchen-vector-illustrations-set_0: -733600430465769879
+      different-scales-store-kitchen-vector-illustrations-set_1: 7248396573874938809
+      different-scales-store-kitchen-vector-illustrations-set_10: 5922179104676448838
+      different-scales-store-kitchen-vector-illustrations-set_11: 8737305969182604758
+      different-scales-store-kitchen-vector-illustrations-set_12: 2468398416298349618
+      different-scales-store-kitchen-vector-illustrations-set_2: 8809642356268308749
+      different-scales-store-kitchen-vector-illustrations-set_3: 8524792221057338021
+      different-scales-store-kitchen-vector-illustrations-set_4: -3568529775359133595
+      different-scales-store-kitchen-vector-illustrations-set_5: -8641419164938178163
+      different-scales-store-kitchen-vector-illustrations-set_6: -1046717185619014742
+      different-scales-store-kitchen-vector-illustrations-set_7: -7487914136630488235
+      different-scales-store-kitchen-vector-illustrations-set_8: 1273059311570070476
+      different-scales-store-kitchen-vector-illustrations-set_9: -6828327452564119054
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
