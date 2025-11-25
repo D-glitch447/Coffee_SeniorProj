@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using UnityEditor.SearchService;
+using UnityEngine.SceneManagement;
 
 public class BookManager : MonoBehaviour
 {
@@ -99,6 +101,7 @@ public class BookManager : MonoBehaviour
     public void StartRecipe()
     {
         Debug.Log("Recipe Started! Time to make some coffee! ");
-
+        SceneManager.LoadScene("MainHub");
+        globalData.Instance.isKitchenUnlocked = true;
     }
 }
