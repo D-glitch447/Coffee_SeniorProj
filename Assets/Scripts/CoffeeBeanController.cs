@@ -7,7 +7,7 @@ public class CoffeeBeanController : MonoBehaviour
 
     [Header("Settings")]
     public float weight = 0.5f;     // grams per bean
-    private bool inCup = false;
+    //private bool inCup = false;
 
     void Start()
     {

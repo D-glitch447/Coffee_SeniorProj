@@ -1,104 +1,167 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+
+[System.Serializable]
+public class RecipePageLink
+{
+    public string recipeName;   // e.g. "blackcoffee"
+    public GameObject page;     // e.g. BlackCoffee_Page in the scene
+}
 
 public class BookManager : MonoBehaviour
 {
+    [Header("Recipe Data")]
+    public CoffeeRecipeDatabase1 recipeDatabase;
+    public CoffeeBeanRecipe activeRecipe;
+
+    [Header("Recipe Pages (Scene Objects)")]
+    public RecipePageLink[] recipePages;  // Links recipeName → Page GameObject
+
     [Header("Table of Contents Pages")]
-    // These are the containers for the TOC buttons, which is your current view
     public GameObject leftPageTOC;
     public GameObject rightPageTOC;
 
     [Header("Fade Transition")]
-    public FadeController fadeController;  // Add this field
-    
-    [Header("Target Recipe Pages")]
-    // The individual recipe pages you want to swap to
-    public GameObject blackCoffeeRecipePage; 
-    // You'll need one of these for every final recipe page (Latte, Americano, etc.)
+    public FadeController fadeController;
 
-    // We will treat LeftPageTOC and RightPageTOC as the "currentPage"
-    // Since they are visible when the book is at the TOC
-    private GameObject[] currentTOCPages; 
+    private GameObject[] currentTOCPages;
+
+    // Normalize string so that "Black Coffee" == "blackcoffee"
+    private string NormalizeKey(string s)
+    {
+        return string.IsNullOrWhiteSpace(s)
+            ? ""
+            : s.Trim().ToLower().Replace(" ", "");
+    }
 
     void Start()
     {
         currentTOCPages = new GameObject[] { leftPageTOC, rightPageTOC };
-        
-        // Ensure all recipe pages are hidden on start
-        SetPageVisibility(blackCoffeeRecipePage, false);
 
-        // Ensure TOC pages (the buttons) are visible on start
+        // Hide all recipe pages on start
+        foreach (var link in recipePages)
+        {
+            if (link != null && link.page != null)
+                link.page.SetActive(false);
+        }
+
+        // Show the Table of Contents pages
         SetPageVisibility(leftPageTOC, true);
         SetPageVisibility(rightPageTOC, true);
+
+        Debug.Log("[BookManager] Start complete.");
     }
 
-    // Public method that the Black Coffee button will call
     public void GoToRecipe(string recipeName)
     {
-        // For this example, we only handle the Black Coffee page for simplicity
-        if (recipeName.ToLower() == "blackcoffee")
+        string key = NormalizeKey(recipeName);
+        Debug.Log($"[BookManager] GoToRecipe called with '{recipeName}', normalized = '{key}'");
+
+        // 1. Load recipe data
+        activeRecipe = recipeDatabase.GetRecipe(recipeName);
+
+        if (activeRecipe == null)
         {
-            StartCoroutine(SwitchToRecipe(blackCoffeeRecipePage));
+            Debug.LogError($"[BookManager] No recipe data found for '{recipeName}'. " +
+                           $"Make sure the ScriptableObject's recipeName matches.");
+            return;
         }
-        else
+
+        Debug.Log($"[BookManager] Found recipe data: '{activeRecipe.recipeName}'");
+
+        // 2. Find the matching page in recipePages[]
+        GameObject targetPage = null;
+
+        foreach (var link in recipePages)
         {
-            Debug.LogError("Recipe not yet implemented: " + recipeName);
+            if (link == null) continue;
+
+            string linkKey = NormalizeKey(link.recipeName);
+
+            Debug.Log($"[BookManager] Checking page link: '{link.recipeName}' → normalized '{linkKey}'");
+
+            if (linkKey == key)
+            {
+                targetPage = link.page;
+                break;
+            }
         }
+
+        if (targetPage == null)
+        {
+            Debug.LogError($"[BookManager] No page GameObject found for recipe '{recipeName}'. " +
+                           "Check BookManager.recipePages in the Inspector.");
+            return;
+        }
+
+        // Page found — switch to it
+        StartCoroutine(SwitchToRecipe(targetPage));
     }
 
-   private IEnumerator SwitchToRecipe(GameObject newPage)
-{
-    // Fade in
-    yield return fadeController.FadeIn();
+    private IEnumerator SwitchToRecipe(GameObject newPage)
+    {
+        yield return fadeController.FadeIn();
 
-        // Hide the current TOC pages
+        // Hide TOC pages
         foreach (GameObject tocPage in currentTOCPages)
-        {
             SetPageVisibility(tocPage, false);
-        }
-    
-    // Show the new recipe page
-    SetPageVisibility(newPage, true);
 
-    // 5. Fade out
-    yield return fadeController.FadeOut();
+        // Hide all recipe pages
+        foreach (var link in recipePages)
+        {
+            if (link.page != null)
+                link.page.SetActive(false);
+        }
+
+        // Show new page
+        SetPageVisibility(newPage, true);
+
+        yield return fadeController.FadeOut();
     }
 
-    //Function for the "Back" button to call
     public void GoBackToTOC()
     {
-        //1. FInd the current visible recipe page
-        if (blackCoffeeRecipePage.activeSelf)
+        // Look through all recipe pages to find the one currently active
+        foreach (var link in recipePages)
         {
-            StartCoroutine(SwitchBackToTOC(blackCoffeeRecipePage));
+            if (link.page != null && link.page.activeSelf)
+            {
+                StartCoroutine(SwitchBackToTOC(link.page));
+                return;
+            }
         }
-        //Add more 'else if' later
+
+        Debug.LogWarning("GoBackToTOC called but no active recipe page was found.");
     }
 
+
     private IEnumerator SwitchBackToTOC(GameObject currentPageToHide)
-{
-    // Fade in before transition
-    yield return fadeController.FadeIn();
+    {
+        yield return fadeController.FadeIn();
 
-    SetPageVisibility(currentPageToHide, false);
+        // Hide the recipe page
+        currentPageToHide.SetActive(false);
 
+        // Show TOC pages
+        SetPageVisibility(leftPageTOC, true);
+        SetPageVisibility(rightPageTOC, true);
 
-    SetPageVisibility(leftPageTOC, true);
-    SetPageVisibility(rightPageTOC, true);
-
-    // Fade out back to normal
-    yield return fadeController.FadeOut();
+        yield return fadeController.FadeOut();
     }
 
     private void SetPageVisibility(GameObject page, bool isVisible)
     {
-        page.SetActive(isVisible);
+        if (page != null)
+            page.SetActive(isVisible);
     }
-    
-    //Function for the Begin button to call
+
     public void StartRecipe()
     {
-        Debug.Log("Recipe Started! Time to make some coffee! ");
-
+        CoffeeRuntime.Instance.activeRecipe = activeRecipe;
+        DontDestroyOnLoad(CoffeeRuntime.Instance.gameObject);
+        SceneManager.LoadScene("ScaletheBeans");
+        Debug.Log("Recipe Started with: " + activeRecipe.recipeName);
     }
 }
