@@ -13,6 +13,11 @@ public class ScaleController : MonoBehaviour
         Instance = this;
     }
 
+    public float GetCurrentWeight()
+    {
+        return totalWeight;
+    }
+
     public void AddWeight(float w)
     {
         totalWeight += w;
