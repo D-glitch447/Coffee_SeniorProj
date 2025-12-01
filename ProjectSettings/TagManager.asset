@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Bean
   - TinCup
+  - WaterStream
+  - Table
   layers:
   - Default
   - TransparentFX
@@ -49,8 +51,14 @@ TagManager:
   - name: Equipment
     uniqueID: 3108338277
     locked: 0
+  - name: WaterStream
+    uniqueID: 1321970799
+    locked: 0
   - name: Bean
     uniqueID: 2781029109
+    locked: 0
+  - name: Kettle
+    uniqueID: 1067922373
     locked: 0
   m_RenderingLayers:
   - Default
