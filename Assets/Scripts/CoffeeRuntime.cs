@@ -4,25 +4,29 @@ public class CoffeeRuntime : MonoBehaviour
 {
     public static CoffeeRuntime Instance;
 
-    // The active recipe data (set by Book Manager)
     public CoffeeBeanRecipe activeRecipe;
 
-    //Player perfomance values
+    // Player performance values
     public float playerFinalWeight;
     public float playerGrindSize;
     public float playerWaterTemp;
     public float playerBrewTime;
 
+    // 🔹 NEW: progression flag
+    public bool hasCompletedScale = false;
+    public bool hasCompletedGrind = false;
 
     void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
-        } else
+        }
+        else
         {
             Destroy(gameObject);
         }
-    } 
+    }
+
 }

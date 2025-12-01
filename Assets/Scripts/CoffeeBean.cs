@@ -21,7 +21,7 @@ public class CoffeeBean : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Cup") && !inCup)
+        if (collision.gameObject.CompareTag("TinCup") && !inCup)
         {
             inCup = true;
             ScaleController.Instance.AddWeight(weight);

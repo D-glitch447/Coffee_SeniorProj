@@ -157,11 +157,46 @@ public class BookManager : MonoBehaviour
             page.SetActive(isVisible);
     }
 
-    public void StartRecipe()
+    // public void StartRecipe()
+    // {
+    //     //Save the active recipe globally
+    //     CoffeeRuntime.Instance.activeRecipe = activeRecipe;
+
+    //     Debug.Log("StartRecipe called. activeRecipe = " + activeRecipe);
+
+    //     //Persist runtime between scenes
+    //     DontDestroyOnLoad(CoffeeRuntime.Instance.gameObject);
+
+    //     Debug.Log("Recipe Started with: " + activeRecipe.recipeName);
+    // }
+   public void StartRecipe()
     {
+
+        // 1. Validate that a recipe is selected
+        if (activeRecipe == null)
+        {
+            Debug.LogError("[BookManager] ERROR: No recipe selected");
+            return;
+        }
+
+        // 2. Validate that CoffeeRuntime singleton exists
+        if (CoffeeRuntime.Instance == null)
+        {
+            Debug.LogError("[BookManager] ERROR: CoffeeRuntime.Instance is NULL. " +
+                        "Add CoffeeRUntime to the Kitchen Scene");
+            return;
+        }
+
+        // 3. Store the selected recipe into the runtime (so next scenes can read it)
         CoffeeRuntime.Instance.activeRecipe = activeRecipe;
+
+        // 4. Keep the runtime alive between scenes
         DontDestroyOnLoad(CoffeeRuntime.Instance.gameObject);
-        SceneManager.LoadScene("ScaletheBeans");
-        Debug.Log("Recipe Started with: " + activeRecipe.recipeName);
+
+        // 5. Debug confirmation
+        Debug.Log("[BookManager] Recipe STARTED: " + activeRecipe.recipeName);
     }
+
+
+
 }
