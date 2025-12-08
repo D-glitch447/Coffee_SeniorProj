@@ -1,23 +1,37 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // <-- ADD THIS LINE!
+using TMPro;
 
 public class CoffeeGrinder : MonoBehaviour
 {
-    
-
     [Header("Grind Settings")]
-    [Tooltip("The total amount of rotation (in degrees) required to finish grinding. 3600 = 10 full rotations.")]
+    [Tooltip("The total amount of rotation (in degrees) required to finish grinding.")]
     public float totalGrindRequired = 3600f;
 
-    [Header("UI (Optional)")]
+    [Tooltip("The target weight in grams.")]
+    public float targetGrams = 20.0f;
+
+    [Header("Visuals (GameObjects)")]
+    [Tooltip("Assign the 'fullGrndr' GameObject here. It will be hidden when done.")]
+    public GameObject fullGrinderObject;
+
+    [Tooltip("Assign the 'emptyGrinderNoHandle' GameObject here. It will be shown when done.")]
+    public GameObject emptyGrinderObject;
+
+    [Header("Audio")] // <-- NEW SECTION
+    [Tooltip("Assign an AudioSource component here.")]
+    public AudioSource audioSource;
+    [Tooltip("The sound of beans grinding.")]
+    public AudioClip grindingSound;
+    [Tooltip("The sound of an empty grinder spinning.")]
+    public AudioClip emptyGrinderSound;
+
+    [Header("UI")]
     [Tooltip("A UI Image set to 'Filled' (e.g., Radial 360) to show progress.")]
     public Image progressFillImage;
 
-    [Header("Numeric UI")] // <-- NEW HEADER
     [Tooltip("The TextMeshPro object to display the current grind amount.")]
-    public TextMeshProUGUI grindAmountText; // <-- NEW VARIABLE
+    public TextMeshProUGUI grindAmountText;
 
     // Private state variables
     [SerializeField] private float currentGrindProgress = 0f;
@@ -28,10 +42,7 @@ public class CoffeeGrinder : MonoBehaviour
     [SerializeField] private float minDist = 20f;
     [SerializeField] private bool isGrinding = false;
     private float currentVisualAngle = 0f;
-
-    // --- NEW VARIABLE ---
-    // This tracks if we've hit the optimal goal at least once.
-    private bool hasReachedOptimalGrind = false; // <-- NEW
+    private bool hasReachedOptimalGrind = false;
 
     void Start()
     {
@@ -39,31 +50,28 @@ public class CoffeeGrinder : MonoBehaviour
         centerScreenPos = mainCamera.WorldToScreenPoint(transform.position);
         currentVisualAngle = transform.eulerAngles.z;
 
-        if (progressFillImage != null)
-        {
-            progressFillImage.fillAmount = 0;
-        }
+        if (progressFillImage != null) progressFillImage.fillAmount = 0;
+
+        // Ensure audio loops so it doesn't cut out while dragging
+        if (audioSource != null) audioSource.loop = true;
+
+        UpdateGrindText();
     }
 
     public void StartGrinding()
     {
-        // We no longer check if we are "done", so the user can
-        // always start grinding, even if the goal is met.
         isGrinding = true;
         previousAngle = GetMouseAngle();
     }
 
-   void Update()
+    void Update()
     {
-        // --- THIS CHECK IS REMOVED ---
-        // We remove the "return" statement that was at the top.
-        // We WANT the script to keep running.
-
         if (isGrinding)
         {
+            // If user lets go of the mouse button, stop grinding/sound
             if (Input.GetMouseButtonUp(0))
             {
-                isGrinding = false;
+                StopGrinding();
                 return;
             }
 
@@ -72,39 +80,87 @@ public class CoffeeGrinder : MonoBehaviour
                 float currentAngle = GetMouseAngle();
                 float deltaAngle = Mathf.DeltaAngle(previousAngle, currentAngle);
 
-                // Visual Feedback (Relative Rotation)
+                // Visual Feedback (Handle Rotation always happens)
                 currentVisualAngle += deltaAngle;
                 transform.eulerAngles = new Vector3(0, 0, currentVisualAngle);
 
-                // Progress Calculation (uses the same deltaAngle)
-                if (deltaAngle > 0)
+                // Check if user is actually moving the mouse (grinding)
+                if (deltaAngle > 0.1f) // Small threshold to prevent jitter
                 {
-                    currentGrindProgress += deltaAngle;
-
-                    // The UI progress bar will *keep* filling.
-                    // If you want it to *stop* at 100%, change this logic.
-                    if (progressFillImage != null)
-                    {
-                        progressFillImage.fillAmount = currentGrindProgress / totalGrindRequired;
-                    }
-                    UpdateGrindText(); // <-- CALL THE NEW FUNCTION HERE
+                    HandleProgress(deltaAngle);
+                    HandleAudio(true); // Playing sound
+                }
+                else
+                {
+                    HandleAudio(false); // Silence
                 }
 
                 previousAngle = currentAngle;
-
-                // --- LOGIC MODIFIED HERE ---
-                // We now check if progress is met AND we haven't already
-                // triggered the "complete" event.
-                if (currentGrindProgress >= totalGrindRequired && !hasReachedOptimalGrind)
-                {
-                    // This block will now only run ONCE.
-                    hasReachedOptimalGrind = true; // Set the flag
-                    OnGrindComplete();
-                }
             }
         }
     }
-    
+
+    private void HandleProgress(float deltaAngle)
+    {
+        // Only increase progress if we haven't finished yet
+        if (!hasReachedOptimalGrind)
+        {
+            currentGrindProgress += deltaAngle;
+
+            // CAP THE PROGRESS: Prevent going over 100%
+            if (currentGrindProgress >= totalGrindRequired)
+            {
+                currentGrindProgress = totalGrindRequired; // Hard cap
+                hasReachedOptimalGrind = true;
+                OnGrindComplete();
+            }
+
+            // Update UI
+            if (progressFillImage != null)
+            {
+                progressFillImage.fillAmount = currentGrindProgress / totalGrindRequired;
+            }
+            UpdateGrindText();
+        }
+    }
+
+    private void HandleAudio(bool isMoving)
+    {
+        if (audioSource == null) return;
+
+        if (isMoving)
+        {
+            // Determine which clip should play based on progress
+            AudioClip correctClip = hasReachedOptimalGrind ? emptyGrinderSound : grindingSound;
+
+            // If the wrong clip is loaded, swap it
+            if (audioSource.clip != correctClip)
+            {
+                audioSource.clip = correctClip;
+                audioSource.Play();
+            }
+            // If nothing is playing, start playing
+            else if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            // If user is holding handle but not moving, silence.
+            if (audioSource.isPlaying)
+            {
+                audioSource.Pause(); 
+            }
+        }
+    }
+
+    private void StopGrinding()
+    {
+        isGrinding = false;
+        if (audioSource != null) audioSource.Stop();
+    }
+
     private float GetMouseAngle()
     {
         Vector3 mousePos = Input.mousePosition;
@@ -112,46 +168,23 @@ public class CoffeeGrinder : MonoBehaviour
         return (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) - 90f;
     }
 
-    /// <summary>
-    /// Called ONCE when the optimal grind is first reached.
-    /// </summary>
     private void OnGrindComplete()
     {
         Debug.Log("Optimal Grinding Complete!");
-        
-        // --- THIS IS REMOVED ---
-        // this.enabled = false; // <-- REMOVED!
 
-        // --- ADD YOUR "OPTIMAL" LOGIC HERE ---
-        // For example:
-        // - Play a "Ding!" sound effect
-        // - Show a green checkmark
-        // - Call a function in your GameManager: GameManager.instance.SetGrindComplete(true);
+        // Switch Visuals
+        if (fullGrinderObject != null) fullGrinderObject.SetActive(false);
+        if (emptyGrinderObject != null) emptyGrinderObject.SetActive(true);
     }
 
-    /// <summary>
-    /// Public function for other scripts to check the final grind value.
-    /// </summary>
-    public float GetCurrentGrindAmount()
-    {
-        return currentGrindProgress;
-    }
-    
     private void UpdateGrindText()
     {
         if (grindAmountText != null)
         {
-            // Convert rotation (degrees) into a meaningful unit (e.g., "Grams")
-            // Assuming totalGrindRequired (3600) = 20.0 Grams (A common espresso dose)
-            // You can adjust the 20.0f to be a variable if you want the target to change.
-            float targetGrams = 20.0f; 
-            float grams = (currentGrindProgress / totalGrindRequired) * targetGrams; 
-
-            // Safety clamp to prevent huge numbers
-            grams = Mathf.Clamp(grams, 0f, 100f); 
-
-            // Update the text. ":F1" formats the number to one decimal place (e.g., "7.5g")
-            grindAmountText.text = $"{grams:F1}g";
+            float currentGrams = (currentGrindProgress / totalGrindRequired) * targetGrams;
+            
+            // Format: "20.0g / 20.0g"
+            grindAmountText.text = $"{currentGrams:F1}g / {targetGrams:F1}g";
         }
     }
 }

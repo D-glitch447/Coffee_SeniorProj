@@ -1,85 +1,110 @@
-
 using UnityEngine;
+using UnityEngine.UI; // Added in case you use the slider later
 
-/// <summary>
-/// KettleController - Follows the mouse and notifies the CoffeeBedManager when pouring.
-/// Improvements:
-/// - Uses Camera.main to convert screen->world with a safe z value
-/// - Caches CoffeeBedManager and SpriteRenderer
-/// - Does not assume kettle and coffee bed share z-depths; it keeps kettle z unchanged after mapping
-/// </summary>
 public class KettleController : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
-    public Sprite PouringSprite; // Assign the tilted/pouring kettle sprite in the Inspector
-    public Sprite IdleSprite;    // Assign the idle/untilted kettle sprite
-
     private CoffeeBedManager coffeeManager;
 
-    // Optional: an offset to set the pour position relative to kettle transform (e.g., spout)
-    [Header("Pour Offset (local)")]
+    
+
+    [Header("Sprites")]
+    public Sprite PouringSprite; 
+    public Sprite IdleSprite;    
+
+    [Header("Pour Settings")]
     public Vector3 SpoutLocalOffset = Vector3.zero;
+    
+    [Header("Tilt Controls")]
+    [Tooltip("How fast the kettle tilts when holding A or D.")]
+    public float TiltSensitivity = 2.0f; // Adjusted for key holding speed
+    
+    [Tooltip("Minimum angle (slow pour)")]
+    public float MinTiltAngle = 10f; 
+    [Tooltip("Maximum angle (fast pour)")]
+    public float MaxTiltAngle = 60f;
+
+    [Header("UI Feedback")]
+    public Slider FlowSlider; // Optional: Drag a UI Slider here to see the rate
+    
+    // 0.0 = Min Flow, 1.0 = Max Flow
+    private float currentFlowFactor = 0.5f; 
+    private float initialZRotation;
 
     void Start()
     {
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         coffeeManager = FindObjectOfType<CoffeeBedManager>();
-        if (coffeeManager == null) Debug.LogWarning("No CoffeeBedManager found in scene.");
+        initialZRotation = transform.rotation.eulerAngles.z;
+
+        if (coffeeManager == null) Debug.LogError("Kettle could not find CoffeeBedManager!");
     }
 
     void Update()
     {
-        // 1. Mouse Follow Logic
+        HandleMouseFollow();
+        HandleTiltInput();
+        HandlePouring();
+    }
+
+    void HandleMouseFollow()
+    {
+        if (Camera.main == null) return;
         Vector3 mousePosition = Input.mousePosition;
-        // set a safe z based on camera - using a value that maps to plane z of this object
-        Camera cam = Camera.main;
-        if (cam == null) return;
+        float zDistance = Mathf.Abs(Camera.main.transform.position.z - transform.position.z);
+        mousePosition.z = zDistance;
+        transform.position = Camera.main.ScreenToWorldPoint(mousePosition);
+    }
 
-        // We'll compute a z value so ScreenToWorldPoint returns a point that lies on the object's z plane
-        float zForScreenToWorld = Mathf.Abs(cam.transform.position.z - transform.position.z);
-        mousePosition.z = zForScreenToWorld;
-        Vector3 worldPosition = cam.ScreenToWorldPoint(mousePosition);
+    void HandleTiltInput()
+    {
+        float tiltDirection = 0f;
 
-        // Keep original z (to avoid moving the kettle off its intended z)
-        worldPosition.z = transform.position.z;
-        transform.position = worldPosition;
-
-        // 2. Pouring and Sprite/Logic Toggle
-        if (Input.GetMouseButton(0))
+        // D key = Tilt Forward (Pour Faster)
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) 
         {
-            if (spriteRenderer != null && PouringSprite != null) spriteRenderer.sprite = PouringSprite;
+            tiltDirection = 1f;
+        }
+        // A key = Tilt Backward (Pour Slower)
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) 
+        {
+            tiltDirection = -1f;
+        }
+
+        if (tiltDirection != 0f)
+        {
+            // Use Time.deltaTime for smooth movement regardless of framerate
+            currentFlowFactor += tiltDirection * TiltSensitivity * Time.deltaTime;
+            currentFlowFactor = Mathf.Clamp01(currentFlowFactor);
+        }
+
+        // Update UI Slider if connected
+        if (FlowSlider != null)
+        {
+            FlowSlider.value = currentFlowFactor;
+        }
+    }
+
+    void HandlePouring()
+    {
+        if (Input.GetMouseButton(0)) // Left Click / Hold to actually pour
+        {
+            if (spriteRenderer != null) spriteRenderer.sprite = PouringSprite;
+
+            float targetAngle = Mathf.Lerp(MinTiltAngle, MaxTiltAngle, currentFlowFactor);
+            transform.rotation = Quaternion.Euler(0, 0, initialZRotation - targetAngle);
 
             if (coffeeManager != null)
             {
-                // Calculate world position of the pour point (optionally offset from kettle transform)
                 Vector3 pourWorldPos = transform.TransformPoint(SpoutLocalOffset);
-                coffeeManager.ApplyPour(pourWorldPos);
+                // PASSING TWO ARGUMENTS (Requires the CoffeeBedManager fix below)
+                coffeeManager.ApplyPour(pourWorldPos, currentFlowFactor);
             }
         }
-        else
+        else 
         {
-            if (spriteRenderer != null && IdleSprite != null) spriteRenderer.sprite = IdleSprite;
-            
+            if (spriteRenderer != null) spriteRenderer.sprite = IdleSprite;
+            transform.rotation = Quaternion.Euler(0, 0, initialZRotation);
         }
-
-        if (Input.GetMouseButton(0))
-        {
-            if (spriteRenderer != null && PouringSprite != null) spriteRenderer.sprite = PouringSprite;
-
-                if (coffeeManager != null)
-                {
-                    // --- ADD THIS LOG ---
-                    // Debug.Log("Kettle is calling ApplyPour!"); 
-                    
-                    Vector3 pourWorldPos = transform.TransformPoint(SpoutLocalOffset);
-                    coffeeManager.ApplyPour(pourWorldPos);
-                }
-                else
-                {
-                // --- ADD THIS LOG ---
-                Debug.LogError("Kettle cannot find CoffeeManager! Is it attached to the CoffeeGroundsManager object?");
-            }
-        }
-
     }
 }
