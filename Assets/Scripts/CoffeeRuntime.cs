@@ -10,11 +10,14 @@ public class CoffeeRuntime : MonoBehaviour
     public float playerFinalWeight;
     public float playerGrindSize;
     public float playerWaterTemp;
+    public float playerWaterWeight;
     public float playerBrewTime;
 
     // 🔹 NEW: progression flag
     public bool hasCompletedScale = false;
     public bool hasCompletedGrind = false;
+
+    public bool hasCompletedMeasuringWater = false;
 
     void Awake()
     {

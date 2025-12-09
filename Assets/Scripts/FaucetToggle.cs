@@ -9,6 +9,8 @@ public class FaucetToggle : MonoBehaviour
 
     private bool isOn = false;
 
+    public bool IsOn => isOn;
+
     void Start()
     {
         // Start off with water off
