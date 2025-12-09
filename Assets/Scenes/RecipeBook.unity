@@ -5017,7 +5017,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Black Coffee ........... 6
+  m_text: Blend Coffee ........... 6
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: de3d052bb687f4c42a985aa974efb372, type: 2}
   m_sharedMaterial: {fileID: 5226327059443595943, guid: de3d052bb687f4c42a985aa974efb372, type: 2}
@@ -5715,7 +5715,11 @@ MonoBehaviour:
   playerFinalWeight: 0
   playerGrindSize: 0
   playerWaterTemp: 0
+  playerWaterWeight: 0
   playerBrewTime: 0
+  hasCompletedScale: 0
+  hasCompletedGrind: 0
+  hasCompletedMeasuringWater: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,47 +1,60 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEditor.ShaderGraph.Internal;
 
 public class WaterFillController : MonoBehaviour
 {
-    [Header("UI")]
-    public Image waterFillBar;
-    public TextMeshProUGUI waterText;
+    [Header("References")]
+    public FaucetToggle faucet;         // faucet reference
+    public TextMeshProUGUI weightText;  // UI text element
+    public Image waterFillImage;        // THIS object’s Image
 
-    [Header("Water Settings")]
-    public float currentWater = 0f;   // grams in kettle
-    public float fillRate = 20f;      // grams per second
-    public float maxVisual = 400f;    // how high the bar can appear visually
+    [Header("Fill Settings")]
+    public float fillRate = 20f;        // grams per second
+    public float maxWeight = 400f;      
+    private float currentWeight = 0f;
 
-    [Header("Faucet")]
-    public FaucetToggle faucet;       // reference to faucet on/off
-
-    void Update()
+    private void Awake()
     {
-        if (faucet.IsOn)
+        waterFillImage = GetComponent<Image>();
+
+        if(waterFillImage == null) 
+            Debug.LogError("[WaterFillController] No Image found on WaterFillBar!");
+        if(faucet == null)
+            Debug.LogWarning("[WaterFillController] Faucet not assigned");
+        if(weightText == null)
+            Debug.LogWarning("[WaterFillController] WeightTect is not assigned");
+    }
+
+    private void Start()
+    {
+        currentWeight = 0f;
+        UpdateUI();
+    }
+    private void Update()
+    {
+        if (faucet == null || waterFillImage == null)
+            return;
+        
+        if(faucet.IsOn && currentWeight < maxWeight)
         {
-            currentWater += fillRate * Time.deltaTime;
-
-            // Update bar (bar max is NOT recipe target)
-            // float fillPercent = Mathf.Clamp01(currentWater / maxVisual);
-            float fillPercent = Mathf.Clamp01((currentWater / maxVisual));
-            waterFillBar.fillAmount = fillPercent;
+            currentWeight += fillRate * Time.deltaTime;
+            UpdateUI();
         }
-
-        // Update text
-        waterText.text = $"{currentWater:F1} g";
     }
 
-    // Called by the Check button ("Done Filling")
-    public void ConfirmWaterAmount()
+    void UpdateUI()
     {
-        CoffeeRuntime.Instance.playerWaterWeight = currentWater;
-        Debug.Log("Final Water = " + currentWater + "g");
+        currentWeight = Mathf.Clamp(currentWeight, 0f, maxWeight);
+
+        waterFillImage.fillAmount = currentWeight/maxWeight;
+
+        if(weightText != null) 
+            weightText.text = $"{currentWeight:F0} g";
     }
-    public float GetFinalWater()
+
+    public float GetFinalWeight()
     {
-        return currentWater;
+        return currentWeight;
     }
 }
-

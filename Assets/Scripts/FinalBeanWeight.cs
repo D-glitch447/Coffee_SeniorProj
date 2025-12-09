@@ -28,7 +28,7 @@ public class finalBeanWeight : MonoBehaviour
         Debug.Log("Scale finished. Final Weight = " + finalWeight);
 
         // 4. Return to kitchen scene
-        SceneManager.LoadScene("Kitchen");
+        SceneManager.LoadScene("MeasuringWater");
     }
 }
 

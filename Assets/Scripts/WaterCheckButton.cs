@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class WaterCheckButton : MonoBehaviour
 {
-    public WaterFillController kettle;   // reference to your kettle script
+    public WaterFillController fillController;   // reference to your kettle script
 
     public void CheckWater()
     {
-        float waterAmount = kettle.currentWater;
+        float waterAmount = fillController.GetFinalWeight();
 
         // Store the final water amount in CoffeeRuntime
         CoffeeRuntime.Instance.playerWaterWeight = waterAmount;
