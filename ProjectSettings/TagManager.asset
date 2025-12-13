@@ -8,6 +8,7 @@ TagManager:
   - TinCup
   - WaterStream
   - Table
+  - Scale
   layers:
   - Default
   - TransparentFX

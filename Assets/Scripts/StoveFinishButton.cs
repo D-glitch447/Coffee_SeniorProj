@@ -40,6 +40,7 @@ public class StoveFinishButton : MonoBehaviour
         // float penalty = CalculatePenalty(finalTemp);
 
         CoffeeRuntime.Instance.playerWaterTemp = finalTemp;
+        CoffeeRuntime.Instance.kitchenState = KitchenState.AfterScaling;
         // CoffeeRuntime.Instance.waterTempPenalty = penalty;
 
         Debug.Log("Final Temperature: " + finalTemp);
@@ -48,18 +49,4 @@ public class StoveFinishButton : MonoBehaviour
         // fade into next scene
         FadeController.Instance.FadeToScene("Kitchen");
     }
-
-    // private float CalculatePenalty(float temp)
-    // {
-    //     if (temp >= perfectMin && temp <= perfectMax)
-    //         return 0f;
-
-    //     if (temp > perfectMax)
-    //         return (temp - perfectMax) * penaltyMultiplier;
-
-    //     if (temp < perfectMin)
-    //         return (perfectMin - temp) * penaltyMultiplier;
-
-    //     return 0f;
-    // }
 }

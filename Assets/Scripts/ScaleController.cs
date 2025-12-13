@@ -7,6 +7,8 @@ public class ScaleController : MonoBehaviour
     public TMP_Text ScaleText;
     private float totalWeight = 0f;
 
+    private bool shownTooMuchDialogue = false;
+
     void Awake()
     {
         Instance = this;
@@ -20,6 +22,16 @@ public class ScaleController : MonoBehaviour
     public void AddWeight(float w)
     {
         totalWeight += w;
+        if(totalWeight <0f) totalWeight = 0f;
+
+        float target = CoffeeRuntime.Instance.activeRecipe.coffeeWeightGrams;
+
+        if(totalWeight > target && !shownTooMuchDialogue)
+        {
+            shownTooMuchDialogue = true;
+
+            TutorialManager.Instance.ShowTooManyBeansWarning();
+        }
         Debug.Log($"Scale new weight: {totalWeight}g");
 
         UpdateScaleDisplay();
@@ -42,5 +54,4 @@ public class ScaleController : MonoBehaviour
         if (totalWeight < 0f) totalWeight = 0f;
         UpdateScaleDisplay();
     }
-
 }

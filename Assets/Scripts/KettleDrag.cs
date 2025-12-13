@@ -4,10 +4,13 @@ public class KettleDrag : MonoBehaviour
 {
     public StoveBurner leftBurner;
     public StoveBurner rightBurner;
+    private Vector3 startPosition;
 
     private Rigidbody2D rb;
     private bool isDragging = false;
     private Vector3 offset;
+    public AudioSource KettleTap;
+    public AudioClip KettleTapClip;
 
     [Header("Snap Settings")]
     public float snapDistance = 1.25f;
@@ -16,10 +19,16 @@ public class KettleDrag : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Dynamic;
+
+        // Prevent ALL rotation forever
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        //keep track of the kettle position in the beginning
+        startPosition = transform.position;
     }
 
     void OnMouseDown()
     {
+        if(TutorialManager.InputLocked) return;
         isDragging = true;
         offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -44,9 +53,39 @@ public class KettleDrag : MonoBehaviour
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3 newPos = mousePos + offset;
             newPos.z = 0;
+
             rb.MovePosition(newPos);
+            rb.linearVelocity = Vector2.zero; // prevents drifting
         }
     }
+    bool IsOffScreen()
+    {
+        Vector3 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
+        return viewportPos.y < -0.2f || viewportPos.y > 1.2f ||
+            viewportPos.x < -0.2f || viewportPos.x > 1.2f;
+    }
+
+    void LateUpdate()
+    {
+        if (IsOffScreen())
+        {
+            ResetKettle();
+        }
+    }
+
+    private void ResetKettle()
+    {
+        isDragging = false;
+
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+
+        rb.bodyType = RigidbodyType2D.Static;
+        transform.position = startPosition;
+
+        rb.bodyType = RigidbodyType2D.Dynamic;
+    }
+
 
     private bool TrySnapToBurner(StoveBurner burner)
     {
@@ -60,11 +99,14 @@ public class KettleDrag : MonoBehaviour
             transform.position = burner.dropPoint.position;
 
             rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f; //
             rb.bodyType = RigidbodyType2D.Static;
 
+            KettleTap.PlayOneShot(KettleTapClip);
             burner.SetKettlePresent(true);
             return true;
         }
         return false;
     }
+
 }

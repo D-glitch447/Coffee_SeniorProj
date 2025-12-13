@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 
-public class ScaleButton : MonoBehaviour
+public class ScaleButtonHandler : MonoBehaviour
 {
     public FadeController fade;
 
@@ -15,8 +15,13 @@ public class ScaleButton : MonoBehaviour
 
     public string scaleSceneName = "Scaling_Beans"; // <-- put your exact scene name here
 
+    public AudioSource audioSource;
+
+    public AudioClip FootstepsClip;
+
     public void OnScaleClicked()
     {
+        if(TutorialManager.InputLocked) return;
         StartCoroutine(FadeToScaleScene());
     }
 
@@ -28,6 +33,11 @@ public class ScaleButton : MonoBehaviour
         if (fade != null)
         {
             yield return fade.FadeIn();   // fade to black
+            // Play book closing sound
+            audioSource.PlayOneShot(FootstepsClip);
+
+            // ⏱️ WAIT for the sound to finish
+            yield return new WaitForSeconds(FootstepsClip.length);
         }
 
         SceneManager.LoadScene(scaleSceneName);
