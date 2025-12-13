@@ -1,86 +1,90 @@
 using UnityEngine;
-using TMPro; // Needed for the UI text
+using TMPro;
+using System.Collections.Generic;
 
 public class CoffeeBedManager : MonoBehaviour
 {
     // --- Configurable Variables ---
     [Header("Resolution & Physics")]
-    [Tooltip("Higher number = Smaller squares. Try 64 for a smooth look.")]
     public int DesiredGridSize = 64; 
-    
-    [Tooltip("How fast a specific spot gets wet when hit.")]
-    public float SpotPourRate = 50.0f; // Updated to 50 for realistic instant darkening
-    
-    [Tooltip("How fast the neighbor cells get wet.")]
-    public float DiffusionRate = 0.2f; // Updated for better wicking
+    public float SpotPourRate = 50.0f; 
+    public float DiffusionRate = 0.2f; 
+    public float GlobalFillRate = 0.25f; 
 
-    [Tooltip("How fast the ENTIRE cup fills up/darkens when pouring anywhere.")]
-    public float GlobalFillRate = 0.25f; // Updated for bloom timing
-
-    // --- WEIGHT TRACKING ---
     [Header("Physics & Weight")]
-    [Tooltip("How many grams of water are added per second when pouring.")]
     public float GramsPerSecond = 10.0f; 
-    
     public float CurrentWaterInGrams { get; private set; } 
 
-    // --- SCORING ---
-    [Header("Scoring Settings")]
-    public float UniformityWeight = 10f; 
-    public float FinalScore { get; private set; }
+    // --- SCORING SETTINGS ---
+    [Header("Strict Scoring Settings")]
+    public float WeightPenaltyPerGram = 2.0f;
+    public float UnevennessPenalty = 20.0f;
 
-    // --- DEBUGGING ---
+    [Header("Time & Patience")]
+    public float TargetTotalTime = 180.0f; // ideal brew time in seconds [ends when brew reaches target weight]
+    public float TimeBuffer = 10.0f; // adjusts perfect window (i.e , no penalty if within ±10s)
+    public float TimePenaltyPerSecond = 1.0f; // penalty rate beyond buffer
+    public float ImpatiencePenaltyRate = 10.0f; // penalty per second during bloom wait
+
+    [Header("Flow Rate Monitoring")]
+    public float MaxHighFlowDuration = 2.0f;
+    public float HighFlowPenaltyRate = 10.0f;
+    
+    // --- EXPOSED SCORES FOR RUNTIME ---
+    public float FinalScore { get; private set; }
+    public float LastWeightScore { get; private set; }
+    public float LastSaturationScore { get; private set; }
+    public float LastTechniqueScore { get; private set; }
+    public float LastTimeScore { get; private set; }
+    public float LastImpatiencePenalty { get; private set; }
+
+    // --- DEBUGGING & VISUALS ---
     [Header("Live Stats")]
     [SerializeField] private float globalWaterLevel = 0f; 
     [SerializeField] private float currentMeanSaturation;
-    
-    [Header("Gesture Detection")]
     public PourTrajectoryAnalyzer patternAnalyzer; 
-
-    // --- VISUALS ---
-    [SerializeField]
-    private Color WetColor = new Color(0.15f, 0.08f, 0.02f, 1.0f); 
-
-    [Header("Visual Effects")]
+    [SerializeField] private Color WetColor = new Color(0.15f, 0.08f, 0.02f, 1.0f); 
     public BubbleManager bubbleManager; 
-    [Range(0f, 1f)] 
-    public float BubbleSpawnThreshold = 0.4f; 
-
-    [Header("Ambient Bubbles (Seeping Effect)")]
+    [Range(0f, 1f)] public float BubbleSpawnThreshold = 0.4f; 
     public float AmbientSpawnInterval = 0.1f; 
     public int AmbientCheckCount = 5; 
     private float ambientTimer = 0f;
 
     [Header("Draining & Absorption")]
-    [Tooltip("How fast the standing water drains.")]
     public float DrainRate = 0.2f; 
-
-    [Tooltip("How much wetness the grounds keep after water drains (0 to 1).")]
     public float GroundRetention = 0.6f;
 
-    // --- PHASE MANAGEMENT (THE NEW STUFF) ---
+    // --- PHASE MANAGEMENT ---
     [Header("UI References")]
-    public TextMeshProUGUI PhaseText; // Drag your UI Text here
+    public TextMeshProUGUI PhaseText; 
+    public TextMeshProUGUI TimerText; 
+
+    
+
+    [Header("Technique Settings")]
+    // CHANGE 3: Add a threshold variable.
+    [Range(0.1f, 1.0f)] public float TechniqueForgivenessThreshold = 0.9f;
     
     public enum CoffeePhase { Idle, BloomPour, BloomWait, MainPour, Drawdown, Finished }
     
-    [Header("Phase State")]
     public CoffeePhase currentPhase = CoffeePhase.Idle;
-    public string CurrentPhaseName; // For Inspector debug
-
-    [Header("Phase Targets")]
     public float BloomTargetWeight = 40.0f; 
     public float BloomDuration = 30.0f;     
     public float FinalTargetWeight = 250.0f;
-    
     private float stateTimer = 0.0f;
 
-    // --- SCORING TRACKERS ---
+    // --- TRACKERS ---
     private int totalPourFrames = 0;
     private int goodTechniqueFrames = 0;
-    private float maxSaturationDiff = 0f; // To track unevenness
+    private float currentHighFlowTimer = 0f;
+    private float accumulatedFlowPenalty = 0f;
+    
+    // NEW TRACKERS
+    public float brewTimer { get; private set; } = 0f;
+    private bool isTimerRunning = false;
+    private float accumulatedImpatiencePenalty = 0f;
 
-    // --- PRIVATE INTERNAL ---
+    // --- INTERNAL ---
     private int gridSize; 
     private float[,] saturationGrid;
     private Texture2D coffeeTexture;         
@@ -89,74 +93,79 @@ public class CoffeeBedManager : MonoBehaviour
     private int textureWidth;  
     private int textureHeight; 
 
-    void Start()
+    // Add a variable to store the required pattern for checking later
+    private PourPattern targetPattern = PourPattern.Any;
+    private bool needsGentlePour = false;
+
+void Start()
+{
+    InitializeTexture();
+    if(patternAnalyzer != null && spriteRenderer != null)
+        patternAnalyzer.Initialize(spriteRenderer.bounds.center);
+
+    // --- SYNC WITH RECIPE ---
+    if (CoffeeRuntime.Instance != null && CoffeeRuntime.Instance.activeRecipe != null)
     {
-        InitializeTexture();
-
-        // Auto-initialize analyzer if attached
-        if(patternAnalyzer != null && spriteRenderer != null)
-        {
-            patternAnalyzer.Initialize(spriteRenderer.bounds.center);
-        }
+        var r = CoffeeRuntime.Instance.activeRecipe;
+        
+        TargetTotalTime = r.brewTimeSeconds;
+        FinalTargetWeight = r.waterWeightGrams;
+        
+        // Load the new technique requirements
+        targetPattern = r.optimalPattern;
+        needsGentlePour = r.requiresGentlePour;
     }
+}
 
-    // --- CORE LOOP (STATE MACHINE) ---
     void Update()
     {
-        // 1. Monitor Inputs
         bool isPouring = Input.GetMouseButton(0);
+
+        // TIMER LOGIC
+        if (isTimerRunning)
+        {
+            brewTimer += Time.deltaTime;
+            UpdateTimerUI();
+        }
         
-        // 2. State Machine Logic
+        // STATE MACHINE
         switch (currentPhase)
         {
             case CoffeePhase.Idle:
                 UpdatePhaseUI("Ready to Brew");
-                if (isPouring) ChangePhase(CoffeePhase.BloomPour);
+                if (isPouring) 
+                {
+                    isTimerRunning = true; 
+                    ChangePhase(CoffeePhase.BloomPour);
+                }
                 break;
 
             case CoffeePhase.BloomPour:
                 UpdatePhaseUI($"Bloom: Pour to {BloomTargetWeight}g");
-                
                 ApplyPhysicsLogic();
-
-                if (CurrentWaterInGrams >= BloomTargetWeight)
-                {
-                    ChangePhase(CoffeePhase.BloomWait);
-                }
+                if (CurrentWaterInGrams >= BloomTargetWeight) ChangePhase(CoffeePhase.BloomWait);
                 break;
 
             case CoffeePhase.BloomWait:
                 stateTimer += Time.deltaTime;
                 float timeRemaining = Mathf.Max(0, BloomDuration - stateTimer);
                 UpdatePhaseUI($"Blooming... Wait {timeRemaining:F0}s");
-
                 ApplyPhysicsLogic(); 
-                
-                if (stateTimer >= BloomDuration)
-                {
-                    ChangePhase(CoffeePhase.MainPour);
-                }
+                if (stateTimer >= BloomDuration) ChangePhase(CoffeePhase.MainPour);
                 break;
 
             case CoffeePhase.MainPour:
                 UpdatePhaseUI($"Pour to {FinalTargetWeight}g");
-                
                 ApplyPhysicsLogic();
-
-                if (CurrentWaterInGrams >= FinalTargetWeight)
-                {
-                    ChangePhase(CoffeePhase.Drawdown);
-                }
+                if (CurrentWaterInGrams >= FinalTargetWeight) ChangePhase(CoffeePhase.Drawdown);
                 break;
 
             case CoffeePhase.Drawdown:
                 UpdatePhaseUI("Waiting for Drawdown...");
-                
                 ApplyPhysicsLogic();
-
-                // If water level is basically zero (drained)
                 if (globalWaterLevel <= 0.01f)
                 {
+                    isTimerRunning = false;
                     CalculateFinalScore();
                     ChangePhase(CoffeePhase.Finished);
                 }
@@ -166,11 +175,18 @@ public class CoffeeBedManager : MonoBehaviour
                 UpdatePhaseUI($"Done! Score: {FinalScore}");
                 break;
         }
-        
-        CurrentPhaseName = currentPhase.ToString(); 
     }
 
-    // --- HELPER FUNCTIONS ---
+    // --- HELPERS ---
+    private void UpdateTimerUI()
+    {
+        if (TimerText != null)
+        {
+            int minutes = Mathf.FloorToInt(brewTimer / 60F);
+            int seconds = Mathf.FloorToInt(brewTimer % 60F);
+            TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+    }
 
     private void ChangePhase(CoffeePhase newPhase)
     {
@@ -178,10 +194,7 @@ public class CoffeeBedManager : MonoBehaviour
         stateTimer = 0f; 
     }
 
-    private void UpdatePhaseUI(string message)
-    {
-        if (PhaseText != null) PhaseText.text = message;
-    }
+    private void UpdatePhaseUI(string message) { if (PhaseText != null) PhaseText.text = message; }
 
     private void ApplyPhysicsLogic()
     {
@@ -192,38 +205,42 @@ public class CoffeeBedManager : MonoBehaviour
         HandleAmbientBubbles();
     }
 
-    // --- PHYSICS & LOGIC ---
-
+    // --- CORE LOGIC ---
+    // --- CORE LOGIC ---
     public void ApplyPour(Vector3 worldPourPosition, float flowStrength)
     {
         if (saturationGrid == null) return;
 
-        // 1. CIRCULAR DETECTION CHECK
+        // 1. Basic Checks
         Vector3 center = spriteRenderer.bounds.center;
         float radius = spriteRenderer.bounds.extents.x; 
         if (Vector3.Distance(worldPourPosition, center) > radius) return;
 
-        // 2. WEIGHT TRACKING
-        // CHANGE 2: Multiply by flowStrength
-        float currentGramsPerSecond = GramsPerSecond * flowStrength;
-        CurrentWaterInGrams += currentGramsPerSecond * Time.deltaTime;
-        
-        globalWaterLevel = Mathf.Clamp01(globalWaterLevel + (GlobalFillRate * flowStrength * Time.deltaTime));
-
-        // --- NEW: TRAJECTORY TRACKING ---
-        if (patternAnalyzer != null)
+        // 2. Penalties
+        if (currentPhase == CoffeePhase.BloomWait)
         {
-            totalPourFrames++;
-            string gesture = patternAnalyzer.GetGesture();
-            
-            // Give points for controlled circular motions or steady center pours
-            if (gesture == "Circular Motion" || gesture == "Spot Pour / Center")
-            {
-                goodTechniqueFrames++;
-            }
+            accumulatedImpatiencePenalty += ImpatiencePenaltyRate * Time.deltaTime;
         }
 
-        // 3. WETNESS LOGIC
+        if (flowStrength > 0.9f)
+        {
+            currentHighFlowTimer += Time.deltaTime;
+            if (currentHighFlowTimer > MaxHighFlowDuration)
+            {
+                accumulatedFlowPenalty += HighFlowPenaltyRate * Time.deltaTime;
+            }
+        }
+        else
+        {
+            currentHighFlowTimer = 0f; 
+        }
+
+        // 3. Add Water to System
+        float currentGramsPerSecond = GramsPerSecond * flowStrength;
+        CurrentWaterInGrams += currentGramsPerSecond * Time.deltaTime;
+        globalWaterLevel = Mathf.Clamp01(globalWaterLevel + (GlobalFillRate * flowStrength * Time.deltaTime));
+
+        // 4. GRID PHYSICS (Wetness & Bubbles)
         Bounds bounds = spriteRenderer.bounds;
         float nX = (worldPourPosition.x - bounds.min.x) / bounds.size.x;
         float nY = (worldPourPosition.y - bounds.min.y) / bounds.size.y;
@@ -248,32 +265,51 @@ public class CoffeeBedManager : MonoBehaviour
             }
         }
 
+        // 5. TECHNIQUE ANALYZER (The Fix!)
         if (patternAnalyzer != null)
         {
-            patternAnalyzer.AddSamplePoint(worldPourPosition);
+            // [CRITICAL FIX] FEED DATA TO THE ANALYZER FIRST!
+            patternAnalyzer.AddSamplePoint(worldPourPosition); 
+
+            totalPourFrames++;
+            string currentGesture = patternAnalyzer.GetGesture();
+
+            // Check 1: Flow Rate
+            bool isFlowGood = !needsGentlePour || (flowStrength < 0.95f || currentHighFlowTimer < MaxHighFlowDuration);
+
+            // Check 2: Gesture Pattern
+            bool isGestureGood = false;
+
+            if (targetPattern == PourPattern.Any)
+            {
+                isGestureGood = (currentGesture == "Circular Motion" || currentGesture == "Spot Pour / Center");
+            }
+            else if (targetPattern == PourPattern.Circular)
+            {
+                isGestureGood = (currentGesture == "Circular Motion");
+            }
+            else if (targetPattern == PourPattern.Center)
+            {
+                isGestureGood = (currentGesture == "Spot Pour / Center");
+            }
+
+            // Only increment score if BOTH are correct
+            if (isFlowGood && isGestureGood)
+            {
+                goodTechniqueFrames++;
+            }
         }
     }
-
     private void HandleDraining()
     {
-        // 1. ABSORPTION
         if (globalWaterLevel > 0.01f)
         {
             float absorbedWetness = globalWaterLevel * GroundRetention;
-            
             for (int x = 0; x < gridSize; x++)
-            {
                 for (int y = 0; y < gridSize; y++)
-                {
-                    if (absorbedWetness > saturationGrid[x, y])
-                    {
-                        saturationGrid[x, y] = absorbedWetness;
-                    }
-                }
-            }
+                    if (absorbedWetness > saturationGrid[x, y]) saturationGrid[x, y] = absorbedWetness;
         }
 
-        // 2. DRAIN
         bool isPouring = Input.GetMouseButton(0);
         if (!isPouring && globalWaterLevel > 0)
         {
@@ -286,14 +322,12 @@ public class CoffeeBedManager : MonoBehaviour
     {
         if (saturationGrid == null) return;
         float[,] next = (float[,])saturationGrid.Clone();
-
         for (int x = 1; x < gridSize - 1; x++)
         {
             for (int y = 1; y < gridSize - 1; y++)
             {
                 float avg = (saturationGrid[x-1, y] + saturationGrid[x+1, y] + saturationGrid[x, y-1] + saturationGrid[x, y+1]) / 4f;
-                float diff = (avg - saturationGrid[x, y]) * DiffusionRate;
-                next[x, y] += diff;
+                next[x, y] += (avg - saturationGrid[x, y]) * DiffusionRate;
             }
         }
         saturationGrid = next;
@@ -302,7 +336,6 @@ public class CoffeeBedManager : MonoBehaviour
     private void UpdateVisuals()
     {
         if (coffeeTexture == null) return;
-
         float blockW = (float)textureWidth / gridSize;
         float blockH = (float)textureHeight / gridSize;
 
@@ -310,28 +343,21 @@ public class CoffeeBedManager : MonoBehaviour
         {
             for (int gy = 0; gy < gridSize; gy++)
             {
-                float localWetness = saturationGrid[gx, gy];
-                float effectiveWetness = Mathf.Max(localWetness, globalWaterLevel);
+                float eff = Mathf.Max(saturationGrid[gx, gy], globalWaterLevel);
+                if (eff <= 0.01f) continue;
 
-                if (effectiveWetness <= 0.01f) continue;
+                int sx = (int)(gx * blockW), sy = (int)(gy * blockH);
+                int ex = (int)((gx + 1) * blockW), ey = (int)((gy + 1) * blockH);
 
-                int startX = (int)(gx * blockW);
-                int startY = (int)(gy * blockH);
-                int endX = (int)((gx + 1) * blockW);
-                int endY = (int)((gy + 1) * blockH);
-
-                for (int x = startX; x < endX; x++)
+                for (int x = sx; x < ex; x++)
                 {
-                    for (int y = startY; y < endY; y++)
+                    for (int y = sy; y < ey; y++)
                     {
                         if (x >= textureWidth || y >= textureHeight) continue;
-
                         int idx = y * textureWidth + x;
-                        Color original = initialDryColors[idx];
-
-                        if (original.a < 0.1f) continue;
-
-                        coffeeTexture.SetPixel(x, y, Color.Lerp(original, WetColor, effectiveWetness));
+                        Color orig = initialDryColors[idx];
+                        if (orig.a < 0.1f) continue;
+                        coffeeTexture.SetPixel(x, y, Color.Lerp(orig, WetColor, eff));
                     }
                 }
             }
@@ -341,47 +367,27 @@ public class CoffeeBedManager : MonoBehaviour
 
     private void UpdateLiveStats()
     {
-        if (saturationGrid == null) return;
         float sum = 0f;
-        for (int x = 0; x < gridSize; x++)
-            for (int y = 0; y < gridSize; y++)
-                sum += saturationGrid[x, y];
-        
+        for (int x = 0; x < gridSize; x++) for (int y = 0; y < gridSize; y++) sum += saturationGrid[x, y];
         currentMeanSaturation = sum / (gridSize * gridSize);
     }
 
     private void HandleAmbientBubbles()
     {
         if (saturationGrid == null || bubbleManager == null) return;
-
         ambientTimer += Time.deltaTime;
         if (ambientTimer < AmbientSpawnInterval) return;
         ambientTimer = 0f;
-
-        Bounds bounds = spriteRenderer.bounds;
+        Bounds b = spriteRenderer.bounds;
 
         for (int i = 0; i < AmbientCheckCount; i++)
         {
-            int randX = Random.Range(0, gridSize);
-            int randY = Random.Range(0, gridSize);
-
-            if (!IsGridCellValid(randX, randY)) continue;
-
-            float localWetness = saturationGrid[randX, randY];
-            float effectiveWetness = Mathf.Max(localWetness, globalWaterLevel);
-
-            if (effectiveWetness >= BubbleSpawnThreshold)
+            int rx = Random.Range(0, gridSize), ry = Random.Range(0, gridSize);
+            if (!IsGridCellValid(rx, ry)) continue;
+            if (Mathf.Max(saturationGrid[rx, ry], globalWaterLevel) >= BubbleSpawnThreshold)
             {
-                float nX = (randX + 0.5f) / (float)gridSize; 
-                float nY = (randY + 0.5f) / (float)gridSize;
-
-                Vector3 spawnPos = new Vector3(
-                    Mathf.Lerp(bounds.min.x, bounds.max.x, nX),
-                    Mathf.Lerp(bounds.min.y, bounds.max.y, nY),
-                    bounds.center.z
-                );
-
-                bubbleManager.TrySpawnBubble(spawnPos);
+                Vector3 p = new Vector3(Mathf.Lerp(b.min.x, b.max.x, (rx + 0.5f)/gridSize), Mathf.Lerp(b.min.y, b.max.y, (ry + 0.5f)/gridSize), b.center.z);
+                bubbleManager.TrySpawnBubble(p);
             }
         }
     }
@@ -390,90 +396,79 @@ public class CoffeeBedManager : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null || spriteRenderer.sprite == null) return;
-
-        Sprite initialSprite = spriteRenderer.sprite;
-        textureWidth = (int)initialSprite.textureRect.width;
-        textureHeight = (int)initialSprite.textureRect.height;
-
-        if (initialSprite.texture.isReadable)
-        {
-            initialDryColors = initialSprite.texture.GetPixels(
-                (int)initialSprite.textureRect.x, (int)initialSprite.textureRect.y, textureWidth, textureHeight);
-        }
-        else
-        {
-            Debug.LogError("Enable Read/Write on your Coffee Texture in Import Settings!");
-            return;
-        }
+        Sprite s = spriteRenderer.sprite;
+        textureWidth = (int)s.textureRect.width;
+        textureHeight = (int)s.textureRect.height;
+        if (s.texture.isReadable) initialDryColors = s.texture.GetPixels((int)s.textureRect.x, (int)s.textureRect.y, textureWidth, textureHeight);
+        else { Debug.LogError("Enable Read/Write on Coffee Texture!"); return; }
 
         coffeeTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
         coffeeTexture.filterMode = FilterMode.Bilinear;
         coffeeTexture.SetPixels(initialDryColors);
         coffeeTexture.Apply();
-
-        spriteRenderer.sprite = Sprite.Create(coffeeTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.one * 0.5f, initialSprite.pixelsPerUnit);
-
+        spriteRenderer.sprite = Sprite.Create(coffeeTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.one * 0.5f, s.pixelsPerUnit);
         gridSize = Mathf.Min(DesiredGridSize, textureWidth);
         saturationGrid = new float[gridSize, gridSize];
     }
 
-    private bool IsGridCellValid(int gridX, int gridY)
+    private bool IsGridCellValid(int gx, int gy)
     {
-        float nX = gridX / (float)gridSize;
-        float nY = gridY / (float)gridSize;
-
-        int texX = Mathf.FloorToInt(nX * textureWidth);
-        int texY = Mathf.FloorToInt(nY * textureHeight);
-        int index = texY * textureWidth + texX;
-
-        if (index < 0 || index >= initialDryColors.Length) return false;
-        return initialDryColors[index].a > 0.1f;
+        int tx = Mathf.FloorToInt((gx/(float)gridSize) * textureWidth);
+        int ty = Mathf.FloorToInt((gy/(float)gridSize) * textureHeight);
+        int idx = ty * textureWidth + tx;
+        if (idx < 0 || idx >= initialDryColors.Length) return false;
+        return initialDryColors[idx].a > 0.1f;
     }
 
-    private void CalculateFinalScore()
+    // --- GRADING WITH TIME ---
+    public void CalculateFinalScore()
+{
+    // 1. WEIGHT SCORE (30%)
+    float weightError = Mathf.Abs(CurrentWaterInGrams - FinalTargetWeight);
+    LastWeightScore = Mathf.Clamp(100f - (weightError * WeightPenaltyPerGram), 0f, 100f);
+
+    // 2. SATURATION SCORE (30%)
+    List<float> validCells = new List<float>();
+    for (int x = 0; x < gridSize; x++)
+        for (int y = 0; y < gridSize; y++)
+            if (IsGridCellValid(x, y)) validCells.Add(saturationGrid[x, y]);
+    
+    float sum = 0f; foreach(float v in validCells) sum += v;
+    float mean = validCells.Count > 0 ? sum / validCells.Count : 0f;
+    
+    // Simplified Saturation: If mean > 0.95 (mostly wet), give 100.
+    LastSaturationScore = mean >= 0.95f ? 100f : (mean * 100f);
+
+    // 3. TECHNIQUE SCORE (20%) - NEW CURVED LOGIC
+    float rawTechniquePct = totalPourFrames > 0 ? (float)goodTechniqueFrames / totalPourFrames : 0f;
+    
+    // Apply Curve: Normalize so that 0.7 (70%) becomes 1.0 (100%)
+    // This allows for 30% "bad frames" (jerky mouse starts/stops) without penalty.
+    float curvedTechnique = rawTechniquePct / TechniqueForgivenessThreshold;
+    
+    LastTechniqueScore = Mathf.Clamp((curvedTechnique * 100f) - accumulatedFlowPenalty, 0f, 100f);
+
+    // 4. TIME SCORE (20%)
+    float timeDiff = Mathf.Abs(brewTimer - TargetTotalTime);
+    float timeDeduction = 0f;
+    
+    // Only apply penalty if outside the larger buffer
+    if (timeDiff > TimeBuffer)
     {
-        // 1. WEIGHT SCORE (40% of Total)
-        // Perfect if within 5g. Deduct points for every gram off.
-        float weightError = Mathf.Abs(CurrentWaterInGrams - FinalTargetWeight);
-        float weightScore = Mathf.Clamp(100f - weightError, 0f, 100f);
-
-        // 2. SATURATION SCORE (40% of Total)
-        // Check how evenly wet the bed is. We want a high Mean Saturation.
-        float sumSaturation = 0f;
-        int wetCells = 0;
-        
-        for (int x = 0; x < gridSize; x++)
-        {
-            for (int y = 0; y < gridSize; y++)
-            {
-                // Only count cells that represent actual coffee (alpha > 0)
-                if (IsGridCellValid(x, y)) 
-                {
-                    sumSaturation += saturationGrid[x, y];
-                    wetCells++;
-                }
-            }
-        }
-        
-        float averageSaturation = wetCells > 0 ? sumSaturation / wetCells : 0f;
-        // Map 0.0-1.0 saturation to 0-100 score
-        float saturationScore = averageSaturation * 100f; 
-
-        // 3. TRAJECTORY SCORE (20% of Total)
-        // Percentage of time spent using "Good" gestures vs "Bad/None"
-        float trajectoryScore = 0f;
-        if (totalPourFrames > 0)
-        {
-            trajectoryScore = ((float)goodTechniqueFrames / totalPourFrames) * 100f;
-        }
-
-        // 4. FINAL CALCULATION
-        // Weighted Average: 40% Weight, 40% Saturation, 20% Technique
-        FinalScore = (weightScore * 0.4f) + (saturationScore * 0.4f) + (trajectoryScore * 0.2f);
-        
-        // Round to 1 decimal place for neatness
-        FinalScore = Mathf.Round(FinalScore * 10f) / 10f;
-
-        Debug.Log($"Scoring Breakdown -- Weight: {weightScore}, Saturation: {saturationScore}, Tech: {trajectoryScore}");
+        timeDeduction = (timeDiff - TimeBuffer) * TimePenaltyPerSecond;
     }
+    LastTimeScore = Mathf.Clamp(100f - timeDeduction, 0f, 100f);
+    LastImpatiencePenalty = accumulatedImpatiencePenalty;
+
+    // 5. FINAL CALCULATION
+    float rawScore = (LastWeightScore * 0.3f) + 
+                     (LastSaturationScore * 0.3f) + 
+                     (LastTechniqueScore * 0.2f) + 
+                     (LastTimeScore * 0.2f);
+    
+    FinalScore = Mathf.Max(0f, rawScore - accumulatedImpatiencePenalty);
+    FinalScore = Mathf.Round(FinalScore * 10f) / 10f;
+
+    Debug.Log($"Grading | Weight: {LastWeightScore} | Sat: {LastSaturationScore} | Tech: {LastTechniqueScore} (Raw: {rawTechniquePct:P0}) | Time: {LastTimeScore}");
+}
 }
