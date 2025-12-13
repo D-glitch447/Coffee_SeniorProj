@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52958fe02fe7c8844934efe99fd5a3c3, type: 3}
+  m_Name: RecipeBookDialogue
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  messages:
+  - '"Great..now you can click one of these recipes. Please read them, it has very
+    important information"'
+  - '"If you like it, just click begin, if not just click the arrow on the top left
+    to choose another bean" '

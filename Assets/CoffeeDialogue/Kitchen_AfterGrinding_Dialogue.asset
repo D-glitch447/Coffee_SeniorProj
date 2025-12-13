@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52958fe02fe7c8844934efe99fd5a3c3, type: 3}
+  m_Name: Kitchen_AfterGrinding_Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  messages:
+  - '"God damn...that was definitely an arm workout, hopefully you still have some
+    arm strength"'
+  - '"Since our next step is the brewing scene and we will be using that kettle you
+    filled up before"'
+  - '"Now click the kettle so we can begin that process...wish you luck :))"'

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2198928026329029547}
   - component: {fileID: 8918378778942072575}
   - component: {fileID: 5533119411724877755}
+  - component: {fileID: 3362351339139720587}
   m_Layer: 0
   m_Name: CoffeeBean
   m_TagString: Untagged
@@ -155,3 +156,19 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0.10854244, y: -0.2170831}
   m_Radius: 3.8118439
+--- !u!114 &3362351339139720587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8160424236754940666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a4e3ec8c2d982419b22120bd7ebc87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeanSelfDestruct
+  destroyOnTags:
+  - Counter
+  - Scale
+  - Table

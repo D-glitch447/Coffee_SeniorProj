@@ -1,7 +1,10 @@
 using UnityEngine;
+using System.Collections;
 
 public class StoveClickable : MonoBehaviour
 {
+    public AudioSource audioSource;
+    public AudioClip FootstepsClip;
     private void OnMouseDown()
     {
         // CoffeeRuntime must exist
@@ -18,7 +21,19 @@ public class StoveClickable : MonoBehaviour
             return;
         }
 
-        // Everything is good → fade and load scene
-        FadeController.Instance.FadeToScene("StoveCloseUp");
+        // Ignore clicks during dialogue
+        if (TutorialManager.InputLocked) return;
+
+        // Only allow stove click AFTER sink is done
+        if (CoffeeRuntime.Instance.prepRoomState == PrepRoomState.AfterSink)
+        {
+            StartCoroutine(
+                FadeController.Instance.FadeToSceneAfterAudio(
+                    "StoveCloseUp",
+                    FootstepsClip,
+                    1f
+                )
+            );
+        }
     }
 }

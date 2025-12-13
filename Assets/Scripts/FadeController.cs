@@ -7,19 +7,22 @@ public class FadeController : MonoBehaviour
 {
     public static FadeController Instance;
 
+    [Header("Fade Settings")]
     public Image fadeImage;
     public float fadeDuration = 1f;
 
+    [Header("Startup")]
     public bool startBlack = false;
 
-    private void Awake()
-    {   
+    public AudioSource transitionAudio;
 
-        // Singleton pattern so we only have ONE FadeController ever
+    private void Awake()
+    {
+        // Singleton pattern (one FadeController across scenes)
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);  // persists between scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -30,31 +33,46 @@ public class FadeController : MonoBehaviour
         if (fadeImage == null)
             fadeImage = GetComponent<Image>();
 
-        // Start fully transparent in the very first scene
-        SetAlpha(startBlack ? 1f: 0f);
+        // Set initial alpha
+        SetAlpha(startBlack ? 1f : 0f);
     }
 
-    // Fade from transparent -> black
     public IEnumerator FadeIn()
     {
         yield return Fade(0f, 1f);
     }
 
-    // Fade from black -> transparent
     public IEnumerator FadeOut()
     {
         yield return Fade(1f, 0f);
     }
 
+    public IEnumerator FadeIn(float duration)
+    {
+        yield return Fade(0f, 1f, duration);
+    }
+
+    public IEnumerator FadeOut(float duration)
+    {
+        yield return Fade(1f, 0f, duration);
+    }
+
+    // Backward-compatible version (uses default fadeDuration)
     private IEnumerator Fade(float startAlpha, float endAlpha)
+    {
+        yield return Fade(startAlpha, endAlpha, fadeDuration);
+    }
+
+    // Core fade logic with explicit duration
+    private IEnumerator Fade(float startAlpha, float endAlpha, float duration)
     {
         float elapsed = 0f;
         Color color = fadeImage.color;
 
-        while (elapsed < fadeDuration)
+        while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / fadeDuration);
+            float t = Mathf.Clamp01(elapsed / duration);
             color.a = Mathf.Lerp(startAlpha, endAlpha, t);
             fadeImage.color = color;
             yield return null;
@@ -69,8 +87,18 @@ public class FadeController : MonoBehaviour
         color.a = alpha;
         fadeImage.color = color;
     }
-
-    // 🚀 Call this to: fade to black -> load scene -> fade back in
+    public IEnumerator FadeOutWithCallback(System.Action onComplete)
+    {
+        yield return Fade(1f, 0f);
+        onComplete?.Invoke();
+    }
+    public IEnumerator FadeOutWithCallback(float duration, System.Action onComplete)
+    {
+        yield return Fade(1f, 0f, duration);
+        onComplete?.Invoke();
+    }
+ 
+    // Fade → load scene → fade back
     public void FadeToScene(string sceneName)
     {
         StartCoroutine(FadeToSceneRoutine(sceneName));
@@ -78,17 +106,43 @@ public class FadeController : MonoBehaviour
 
     private IEnumerator FadeToSceneRoutine(string sceneName)
     {
-        // 1) Fade to black
+        // Fade to black
         yield return FadeIn();
 
-        // 2) Load next scene
+        // Load scene
         AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
         while (!op.isDone)
         {
             yield return null;
         }
 
-        // 3) Fade back out to show the new scene
+        // Fade back to clear
         yield return FadeOut();
     }
+    public IEnumerator FadeToSceneAfterAudio(string sceneName,AudioClip clip, float audioVolume = 1f)
+    {
+        // Play transition audio FIRST
+        if (transitionAudio != null && clip != null)
+        {
+            transitionAudio.volume = audioVolume;
+            transitionAudio.PlayOneShot(clip);
+        }
+
+        // Fade to black while audio is playing
+        yield return FadeIn();
+
+        //WAIT until the audio finishes
+        if (clip != null)
+            yield return new WaitForSeconds(clip.length);
+
+        //Load the new scene
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+        while (!op.isDone)
+            yield return null;
+
+        // Fade back in
+        yield return FadeOut();
+    }
+
+
 }

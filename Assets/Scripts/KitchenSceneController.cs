@@ -1,44 +1,6 @@
-// using NUnit.Framework.Constraints;
-// using UnityEngine;
-
-// public class KitchenSceneController : MonoBehaviour
-// {
-//     public GameObject introBackground;
-//     public GameObject recipeBookButton;
-
-//     public GameObject gameplayBackground;
-//     public GameObject gameplayButtons;
-//     public FadeController fade;
-
-
-//     private void Start()
-//     {
-//         //Fade in after scene loads
-//         StartCoroutine(fade.FadeOut());
-
-//         //Determine if we're in Intro mode or Gameplay mode
-//         if(CoffeeRuntime.Instance != null && CoffeeRuntime.Instance.activeRecipe != null)
-//         {
-//             //Recipe selected -> show gameplay mode
-//             introBackground.SetActive(false);
-//             recipeBookButton.SetActive(false);
-
-//             gameplayBackground.SetActive(true);
-//             gameplayButtons.SetActive(true);
-//         } else
-//         {
-//             //First time opening kitchen -> intro mode 
-//             introBackground.SetActive(true);
-//             recipeBookButton.SetActive(true);
-
-//             gameplayBackground.SetActive(false);
-//             gameplayBackground.SetActive(false);
-//         }
-//     }
-// }
-
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class KitchenSceneController : MonoBehaviour
@@ -67,6 +29,23 @@ public class KitchenSceneController : MonoBehaviour
         bool hasRecipe  = hasRuntime && CoffeeRuntime.Instance.activeRecipe != null;
         bool finishedScale = hasRuntime && CoffeeRuntime.Instance.hasCompletedScale;
 
+        if (!hasRecipe)
+        {
+            CoffeeRuntime.Instance.kitchenState = KitchenState.FirstTime;
+        }
+        else
+        {
+            if (!CoffeeRuntime.Instance.hasCompletedScale)
+                CoffeeRuntime.Instance.kitchenState = KitchenState.AfterRecipeSelected;
+            else if (!CoffeeRuntime.Instance.hasCompletedGrind)
+                CoffeeRuntime.Instance.kitchenState = KitchenState.AfterScaling;
+            else if (!CoffeeRuntime.Instance.hasCompletedBrewing)
+                CoffeeRuntime.Instance.kitchenState = KitchenState.AfterGrinding;
+            else
+                CoffeeRuntime.Instance.kitchenState = KitchenState.AfterBrewing;
+        }
+
+        
         if (hasRecipe)
         {
             // GAMEPLAY MODE (we came back from RecipeBook Begin)

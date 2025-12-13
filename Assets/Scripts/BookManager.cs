@@ -28,6 +28,10 @@ public class BookManager : MonoBehaviour
 
     private GameObject[] currentTOCPages;
 
+    [Header("Audio")]
+    public AudioSource PageFlip;
+    public AudioClip pageFlipClip;
+
     // Normalize string so that "Black Coffee" == "blackcoffee"
     private string NormalizeKey(string s)
     {
@@ -102,7 +106,19 @@ public class BookManager : MonoBehaviour
 
     private IEnumerator SwitchToRecipe(GameObject newPage)
     {
+
+        float duration = fadeController.fadeDuration;
+
+        if (PageFlip != null && pageFlipClip != null)
+        {
+            duration = pageFlipClip.length;
+            PageFlip.PlayOneShot(pageFlipClip, 2.5f);
+        }
+
+        // Fade IN synced to audio
         yield return fadeController.FadeIn();
+
+        yield return new WaitForSeconds(0.60f);
 
         // Hide TOC pages
         foreach (GameObject tocPage in currentTOCPages)
@@ -118,7 +134,8 @@ public class BookManager : MonoBehaviour
         // Show new page
         SetPageVisibility(newPage, true);
 
-        yield return fadeController.FadeOut();
+        // Fade OUT (slightly faster feels better)
+        yield return fadeController.FadeOut(duration * 0.6f);
     }
 
     public void GoBackToTOC()
@@ -139,8 +156,15 @@ public class BookManager : MonoBehaviour
 
     private IEnumerator SwitchBackToTOC(GameObject currentPageToHide)
     {
-        yield return fadeController.FadeIn();
+        float duration = fadeController.fadeDuration;
 
+        if (PageFlip != null && pageFlipClip != null)
+        {
+            duration = pageFlipClip.length;
+            PageFlip.PlayOneShot(pageFlipClip, 3.5f);
+        }
+        yield return fadeController.FadeIn();
+        yield return new WaitForSeconds(0.60f);
         // Hide the recipe page
         currentPageToHide.SetActive(false);
 
@@ -148,7 +172,7 @@ public class BookManager : MonoBehaviour
         SetPageVisibility(leftPageTOC, true);
         SetPageVisibility(rightPageTOC, true);
 
-        yield return fadeController.FadeOut();
+        yield return fadeController.FadeOut(duration * 0.6f);
     }
 
     private void SetPageVisibility(GameObject page, bool isVisible)
@@ -156,19 +180,6 @@ public class BookManager : MonoBehaviour
         if (page != null)
             page.SetActive(isVisible);
     }
-
-    // public void StartRecipe()
-    // {
-    //     //Save the active recipe globally
-    //     CoffeeRuntime.Instance.activeRecipe = activeRecipe;
-
-    //     Debug.Log("StartRecipe called. activeRecipe = " + activeRecipe);
-
-    //     //Persist runtime between scenes
-    //     DontDestroyOnLoad(CoffeeRuntime.Instance.gameObject);
-
-    //     Debug.Log("Recipe Started with: " + activeRecipe.recipeName);
-    // }
    public void StartRecipe()
     {
 

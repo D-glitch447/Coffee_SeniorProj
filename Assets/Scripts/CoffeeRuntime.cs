@@ -1,4 +1,18 @@
 using UnityEngine;
+public enum KitchenState
+{
+    FirstTime,
+    AfterRecipeSelected,
+    AfterScaling,
+    AfterGrinding,
+    AfterBrewing
+}
+
+public enum PrepRoomState
+{
+    FirstTime,          // show sink dialogue
+    AfterSink,          // show stove dialogue
+}
 
 public class CoffeeRuntime : MonoBehaviour
 {
@@ -12,12 +26,17 @@ public class CoffeeRuntime : MonoBehaviour
     public float playerWaterTemp;
     public float playerWaterWeight;
     public float playerBrewTime;
+    public float grindPenalty;
 
-    // 🔹 NEW: progression flag
     public bool hasCompletedScale = false;
     public bool hasCompletedGrind = false;
-
     public bool hasCompletedMeasuringWater = false;
+    public bool hasCompleteHeating = false;
+    public bool hasCompletedBrewing = false;
+
+    public KitchenState kitchenState = KitchenState.FirstTime;
+    public PrepRoomState prepRoomState = PrepRoomState.FirstTime;
+
 
     void Awake()
     {

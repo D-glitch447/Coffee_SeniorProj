@@ -1,55 +1,3 @@
-// using UnityEngine;
-
-// public class StoveBurner : MonoBehaviour
-// {
-//     public TemperatureUI tempUI;
-//     public GameObject fireArt; 
-//     public Transform dropPoint;
-
-//     public bool hasKettle = false;
-//     private bool burnerOn = false;
-
-//     public void SetKettlePresent(bool value)
-//     {
-//         hasKettle = value;
-
-//         if (value)
-//         {
-//             // Turn UI ON immediately
-//             tempUI.ShowUI();
-
-//             // Do NOT heat yet — only when knob is turned on
-//             if (burnerOn)
-//                 tempUI.SetHeating(true);
-//         }
-//         else
-//         {
-//             // Kettle gone — UI off
-//             tempUI.SetHeating(false);
-//             tempUI.HideUI();
-
-//             burnerOn = false;
-//             fireArt.SetActive(false);
-//         }
-//     }
-//     public void SetBurnerState(bool on)
-//     {
-//         burnerOn = on;
-//         fireArt.SetActive(on);
-
-//         if (on && hasKettle)
-//         {
-//             // UI should already be ON before this call
-//             tempUI.SetHeating(true);
-//         }
-//         else
-//         {
-//             tempUI.SetHeating(false);
-//         }
-//     }
-
-// }
-
 using UnityEngine;
 
 public class StoveBurner : MonoBehaviour
@@ -60,6 +8,8 @@ public class StoveBurner : MonoBehaviour
 
     public bool hasKettle = false;
     private bool burnerOn = false;
+
+    public AudioSource FireAudio;
 
     public void SetKettlePresent(bool value)
     {
@@ -76,26 +26,49 @@ public class StoveBurner : MonoBehaviour
         }
         else
         {
-            // Kettle removed → stop heating or cooling
+
+            // Kettle removed → stop burner & fire
             burnerOn = false;
             fireArt.SetActive(false);
-            tempUI.HideUI();
+
+            if (FireAudio != null && FireAudio.isPlaying) {
+                FireAudio.Stop();
+
+                // Kettle removed → freeze temp
+                tempUI.StopHeating();
+                tempUI.HideUI();
+            }
         }
     }
-
     public void SetBurnerState(bool on)
     {
         burnerOn = on;
         fireArt.SetActive(on);
 
+        // 🔥 Fire audio
+        if (FireAudio != null)
+        {
+            if (on)
+            {
+                if (!FireAudio.isPlaying)
+                    FireAudio.Play();
+            }
+            else
+            {
+                FireAudio.Stop();
+            }
+        }
+
         if (on && hasKettle)
         {
             tempUI.RequestHeating();
         }
-        else if (!on && hasKettle)
+        else
         {
-            tempUI.RequestCooling();
+            // 🔒 Burner OFF → freeze temperature
+            tempUI.StopHeating();
         }
     }
+
 }
 
