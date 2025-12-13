@@ -8,7 +8,7 @@ public class CoffeeGrader : MonoBehaviour
         var ideal = CoffeeRuntime.Instance.activeRecipe;
 
         float weightScore = Mathf.Max(0, 100 - Mathf.Abs(ideal.coffeeWeightGrams - CoffeeRuntime.Instance.playerFinalWeight) * 10);
-        float grindScore = Mathf.Max(0, 100 - Mathf.Abs(ideal.grindSize - CoffeeRuntime.Instance.playerGrindSize) * 15);
+        float grindScore = Mathf.Max(0, 100 - Mathf.Abs(ideal.grindSize - CoffeeRuntime.Instance.playerGrindSizeIndex) * 15);
         float waterScore = Mathf.Max(0, 100 - Mathf.Abs(ideal.waterTemperatureCelsius - CoffeeRuntime.Instance.playerWaterTemp) * 5);
         float brewScore = Mathf.Max(0, 100 - Mathf.Abs(ideal.brewTimeSeconds - CoffeeRuntime.Instance.playerBrewTime) * 4);
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+
 public enum KitchenState
 {
     FirstTime,
@@ -20,13 +21,22 @@ public class CoffeeRuntime : MonoBehaviour
 
     public CoffeeBeanRecipe activeRecipe;
 
-    // Player performance values
+    // --- Player Raw Stats ---
     public float playerFinalWeight;
-    public float playerGrindSize;
+    public float playerGrindAmount;
+    public int playerGrindSizeIndex;
+    public string playerGrindSizeName; 
     public float playerWaterTemp;
     public float playerWaterWeight;
     public float playerBrewTime;
-    public float grindPenalty;
+
+    // --- Player Scoring Stats (Passed from BedManager) ---
+    // These store the 0-100 scores for each category
+    public float scoreWeight;
+    public float scoreSaturation;
+    public float scoreTechnique;
+    public float scoreTime;
+    public float scoreImpatiencePenalty;
 
     public bool hasCompletedScale = false;
     public bool hasCompletedGrind = false;
@@ -36,7 +46,6 @@ public class CoffeeRuntime : MonoBehaviour
 
     public KitchenState kitchenState = KitchenState.FirstTime;
     public PrepRoomState prepRoomState = PrepRoomState.FirstTime;
-
 
     void Awake()
     {
@@ -50,5 +59,4 @@ public class CoffeeRuntime : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
 }
