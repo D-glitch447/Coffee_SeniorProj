@@ -1,12 +1,12 @@
 using UnityEngine;
-using UnityEngine.UI; // Added in case you use the slider later
+using UnityEngine.UI;
+using TMPro; // NEW: Required for Text Mesh Pro
 
 public class KettleController : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     private CoffeeBedManager coffeeManager;
-
-    
+    private AudioSource audioSource;
 
     [Header("Sprites")]
     public Sprite PouringSprite; 
@@ -16,16 +16,13 @@ public class KettleController : MonoBehaviour
     public Vector3 SpoutLocalOffset = Vector3.zero;
     
     [Header("Tilt Controls")]
-    [Tooltip("How fast the kettle tilts when holding A or D.")]
-    public float TiltSensitivity = 2.0f; // Adjusted for key holding speed
-    
-    [Tooltip("Minimum angle (slow pour)")]
+    public float TiltSensitivity = 2.0f;
     public float MinTiltAngle = 10f; 
-    [Tooltip("Maximum angle (fast pour)")]
     public float MaxTiltAngle = 60f;
 
     [Header("UI Feedback")]
-    public Slider FlowSlider; // Optional: Drag a UI Slider here to see the rate
+    public Slider FlowSlider;
+    public TMP_Text FlowText; // NEW: Drag your TextMeshPro object here
     
     // 0.0 = Min Flow, 1.0 = Max Flow
     private float currentFlowFactor = 0.5f; 
@@ -35,6 +32,14 @@ public class KettleController : MonoBehaviour
     {
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         coffeeManager = FindObjectOfType<CoffeeBedManager>();
+        
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+        }
+
         initialZRotation = transform.rotation.eulerAngles.z;
 
         if (coffeeManager == null) Debug.LogError("Kettle could not find CoffeeBedManager!");
@@ -45,6 +50,7 @@ public class KettleController : MonoBehaviour
         HandleMouseFollow();
         HandleTiltInput();
         HandlePouring();
+        UpdateUI(); // NEW: Separate function to keep things clean
     }
 
     void HandleMouseFollow()
@@ -60,51 +66,63 @@ public class KettleController : MonoBehaviour
     {
         float tiltDirection = 0f;
 
-        // D key = Tilt Forward (Pour Faster)
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) 
-        {
-            tiltDirection = 1f;
-        }
-        // A key = Tilt Backward (Pour Slower)
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) 
-        {
-            tiltDirection = -1f;
-        }
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) tiltDirection = 1f;
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) tiltDirection = -1f;
 
         if (tiltDirection != 0f)
         {
-            // Use Time.deltaTime for smooth movement regardless of framerate
             currentFlowFactor += tiltDirection * TiltSensitivity * Time.deltaTime;
             currentFlowFactor = Mathf.Clamp01(currentFlowFactor);
         }
 
-        // Update UI Slider if connected
-        if (FlowSlider != null)
+        if (FlowSlider != null) FlowSlider.value = currentFlowFactor;
+    }
+
+    void UpdateUI()
+    {
+        if (FlowText != null)
         {
-            FlowSlider.value = currentFlowFactor;
+            // Convert 0.0-1.0 factor to a realistic 0-10 g/s readout
+            float displayValue = currentFlowFactor * 10f; 
+            
+            // "F1" formats it to 1 decimal place (e.g., "5.2 g/s")
+            FlowText.text = displayValue.ToString("F1") + " g/s";
         }
     }
 
     void HandlePouring()
     {
-        if (Input.GetMouseButton(0)) // Left Click / Hold to actually pour
+        if (Input.GetMouseButton(0)) 
         {
-            if (spriteRenderer != null) spriteRenderer.sprite = PouringSprite;
-
             float targetAngle = Mathf.Lerp(MinTiltAngle, MaxTiltAngle, currentFlowFactor);
             transform.rotation = Quaternion.Euler(0, 0, initialZRotation - targetAngle);
 
-            if (coffeeManager != null)
+            if (currentFlowFactor <= 0.01f)
             {
-                Vector3 pourWorldPos = transform.TransformPoint(SpoutLocalOffset);
-                // PASSING TWO ARGUMENTS (Requires the CoffeeBedManager fix below)
-                coffeeManager.ApplyPour(pourWorldPos, currentFlowFactor);
+                if (spriteRenderer != null) spriteRenderer.sprite = IdleSprite;
+                if (audioSource != null && audioSource.isPlaying) audioSource.Stop();
+            }
+            else
+            {
+                if (spriteRenderer != null) spriteRenderer.sprite = PouringSprite;
+                
+                if (audioSource != null && !audioSource.isPlaying) audioSource.Play();
+                
+                // Dynamic pitch adjustment
+                if (audioSource != null) audioSource.pitch = 0.8f + (currentFlowFactor * 0.4f);
+
+                if (coffeeManager != null)
+                {
+                    Vector3 pourWorldPos = transform.TransformPoint(SpoutLocalOffset);
+                    coffeeManager.ApplyPour(pourWorldPos, currentFlowFactor);
+                }
             }
         }
         else 
         {
             if (spriteRenderer != null) spriteRenderer.sprite = IdleSprite;
             transform.rotation = Quaternion.Euler(0, 0, initialZRotation);
+            if (audioSource != null && audioSource.isPlaying) audioSource.Stop();
         }
     }
 }
