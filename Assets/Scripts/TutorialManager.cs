@@ -46,7 +46,28 @@ public class TutorialManager : MonoBehaviour
 
         dialogueBox.SetActive(false);
     }
+    private void Update()
+    {
+        //Only listen for input if dialogue is active
+        if(!dialogueBox.activeSelf)
+            return;
+        
+        //Space = instantly show full message
+        if(Input.GetKeyDown(KeyCode.Space))
+            if(typing)
+            {
+                StopTypingInstantly();
+            }
 
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            //Only allow advancing if not typing
+            if(!typing)
+            {
+                NextMessage();
+            }
+        }
+    }
    public void StartDialogue(string[] newMessages)
     {
         if (newMessages == null || newMessages.Length == 0)

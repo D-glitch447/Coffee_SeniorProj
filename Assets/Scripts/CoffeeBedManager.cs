@@ -69,6 +69,8 @@ public class CoffeeBedManager : MonoBehaviour
     
     public CoffeePhase currentPhase = CoffeePhase.Idle;
     public float BloomTargetWeight = 40.0f; 
+    private float bloomStartTime = 0f;
+    private bool bloomRecorded = false;
     public float BloomDuration = 30.0f;     
     public float FinalTargetWeight = 250.0f;
     private float stateTimer = 0.0f;
@@ -110,6 +112,9 @@ void Start()
         
         TargetTotalTime = r.brewTimeSeconds;
         FinalTargetWeight = r.waterWeightGrams;
+
+        BloomTargetWeight = r.bloomWaterGrams;
+        BloomDuration = r.bloomDurationSeconds;
         
         // Load the new technique requirements
         targetPattern = r.optimalPattern;
@@ -143,15 +148,30 @@ void Start()
             case CoffeePhase.BloomPour:
                 UpdatePhaseUI($"Bloom: Pour to {BloomTargetWeight}g");
                 ApplyPhysicsLogic();
-                if (CurrentWaterInGrams >= BloomTargetWeight) ChangePhase(CoffeePhase.BloomWait);
+                if (CurrentWaterInGrams >= BloomTargetWeight)
+                {
+                    bloomStartTime = brewTimer;
+                    ChangePhase(CoffeePhase.BloomWait);
+                }
                 break;
 
             case CoffeePhase.BloomWait:
                 stateTimer += Time.deltaTime;
                 float timeRemaining = Mathf.Max(0, BloomDuration - stateTimer);
+                float bloomRemaining = Mathf.Clamp01(1f - (stateTimer / BloomDuration));
+                bubbleManager.SetBloomIntensity(bloomRemaining);
                 UpdatePhaseUI($"Blooming... Wait {timeRemaining:F0}s");
                 ApplyPhysicsLogic(); 
-                if (stateTimer >= BloomDuration) ChangePhase(CoffeePhase.MainPour);
+                if (stateTimer >= BloomDuration) 
+                {
+                    if(!bloomRecorded)
+                    {
+                        CoffeeRuntime.Instance.playerBloomWaterUsed = CurrentWaterInGrams;
+                        CoffeeRuntime.Instance.playerBloomDuration = brewTimer - bloomStartTime;
+                        bloomRecorded = true;
+                    }
+                    ChangePhase(CoffeePhase.MainPour);
+                }
                 break;
 
             case CoffeePhase.MainPour:
@@ -172,7 +192,7 @@ void Start()
                 break;
 
             case CoffeePhase.Finished:
-                UpdatePhaseUI($"Done! Score: {FinalScore}");
+                // UpdatePhaseUI($"Done! Score: {FinalScore}");
                 break;
         }
     }
@@ -470,5 +490,11 @@ void Start()
     FinalScore = Mathf.Round(FinalScore * 10f) / 10f;
 
     Debug.Log($"Grading | Weight: {LastWeightScore} | Sat: {LastSaturationScore} | Tech: {LastTechniqueScore} (Raw: {rawTechniquePct:P0}) | Time: {LastTimeScore}");
+
+    // 🔗 EXPORT BREWING SCORES TO RUNTIME (for final grading)
+    CoffeeRuntime.Instance.scoreTechnique = LastTechniqueScore;
+    CoffeeRuntime.Instance.scoreSaturation = LastSaturationScore;
+    CoffeeRuntime.Instance.scoreTime = LastTimeScore;
+
 }
 }

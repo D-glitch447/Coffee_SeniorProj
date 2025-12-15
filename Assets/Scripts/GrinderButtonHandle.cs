@@ -13,9 +13,12 @@ public class GrinderButtonHandler : MonoBehaviour
     public Button kettleButton;
 
     public string grindingSceneName = "grindScene"; 
+    private int grinderAttempts = 0;
 
     public void OnGrinderClicked()
     {
+        grinderAttempts++;
+        CoffeeRuntime.Instance.grinderAttempts = grinderAttempts;
         StartCoroutine(GoToGrinder());
     }
 

@@ -15,7 +15,11 @@ MonoBehaviour:
   recipeName: EthiYir
   brewTimeSeconds: 180
   waterTemperatureCelsius: 93
-  grindSize: 6
+  idealGrindSize: 3
   coffeeWeightGrams: 15
   waterWeightGrams: 240
+  bloomWaterGrams: 45
+  bloomDurationSeconds: 40
+  requiresGentlePour: 1
+  optimalPattern: 0
   flavorNotes: Cirtrus, floral, bright acidity

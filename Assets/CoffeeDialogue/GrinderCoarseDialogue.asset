@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52958fe02fe7c8844934efe99fd5a3c3, type: 3}
+  m_Name: GrinderCoarseDialogue
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  messages:
+  - '"Alright..you finally make a selection, let me see why it took you so long"'
+  - '"Ohhh you chose the coarse grind size, this grind allows water to flow more
+    freely through the coffee bed"'
+  - '"Focus on grinding evenly, rushing can make the grind inconsistent"'

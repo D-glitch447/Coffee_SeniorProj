@@ -43,16 +43,6 @@ public class FinishGrindingButton : MonoBehaviour
             Debug.LogError("ERROR: 'Coffee Grinder' slot is empty on the button!");
         }
 
-        // --- Save Grind Size ---
-        if (grinderAdjustment != null)
-        {
-            int sizeIndex = grinderAdjustment.GetCurrentGrindIndex();
-            string sizeName = grinderAdjustment.GetCurrentGrindName();
-            CoffeeRuntime.Instance.playerGrindSizeIndex = sizeIndex;
-            CoffeeRuntime.Instance.playerGrindSizeName = sizeName;
-            Debug.Log($"SUCCESS: Saved Grind Size: {sizeName}");
-        }
-
         CoffeeRuntime.Instance.hasCompletedGrind = true;
     }
 

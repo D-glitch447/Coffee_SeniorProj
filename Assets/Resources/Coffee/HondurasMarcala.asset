@@ -15,7 +15,9 @@ MonoBehaviour:
   recipeName: HondMarc
   brewTimeSeconds: 205
   waterTemperatureCelsius: 93
-  grindSize: 5
+  idealGrindSize: 4
   coffeeWeightGrams: 17
   waterWeightGrams: 265
+  requiresGentlePour: 1
+  optimalPattern: 0
   flavorNotes: Caramel, almond, smooth finish

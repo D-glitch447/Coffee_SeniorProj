@@ -53,8 +53,9 @@ public class HintController : MonoBehaviour
                 hintText.text = $"Target Temp: {r.waterTemperatureCelsius}°C";
                 break;
 
-            case "grindingScene":
-                hintText.text = $"Target Grind: {r.grindSize}";
+            case "grindScene":
+                string grindName = GetGrindSizeName((int)r.idealGrindSize);
+                hintText.text = $"Target Grind: {grindName}";
                 break;
 
             default:
@@ -76,5 +77,21 @@ public class HintController : MonoBehaviour
     {
         hintBox.SetActive(false);
     }
+    private string GetGrindSizeName(int grindIndex)
+    {
+        switch (grindIndex)
+        {
+            case 1: return "Extra Fine";
+            case 2: return "Fine";
+            case 3: return "Medium-Fine";
+            case 4: return "Medium";
+            case 5: return "Medium-Coarse";
+            case 6: return "Coarse";
+            case 7: return "Extra Coarse";
+            case 8: return "Very Coarse";
+            default: return "Unknown";
+        }
+    }
+
 }
 

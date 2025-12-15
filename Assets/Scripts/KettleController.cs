@@ -27,11 +27,13 @@ public class KettleController : MonoBehaviour
     // 0.0 = Min Flow, 1.0 = Max Flow
     private float currentFlowFactor = 0.5f; 
     private float initialZRotation;
+    private bool allowMouseFollow = false;
+
 
     void Start()
     {
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
-        coffeeManager = FindObjectOfType<CoffeeBedManager>();
+        coffeeManager = FindFirstObjectByType<CoffeeBedManager>();
         
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -47,6 +49,8 @@ public class KettleController : MonoBehaviour
 
     void Update()
     {
+        if (!TutorialManager.InputLocked)
+            allowMouseFollow = true;
         HandleMouseFollow();
         HandleTiltInput();
         HandlePouring();
@@ -55,6 +59,10 @@ public class KettleController : MonoBehaviour
 
     void HandleMouseFollow()
     {
+        if (TutorialManager.InputLocked)
+            return;
+        if (!allowMouseFollow)
+            return;
         if (Camera.main == null) return;
         Vector3 mousePosition = Input.mousePosition;
         float zDistance = Mathf.Abs(Camera.main.transform.position.z - transform.position.z);
@@ -64,6 +72,9 @@ public class KettleController : MonoBehaviour
 
     void HandleTiltInput()
     {
+        if (TutorialManager.InputLocked)
+            return;
+
         float tiltDirection = 0f;
 
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) tiltDirection = 1f;
@@ -80,6 +91,9 @@ public class KettleController : MonoBehaviour
 
     void UpdateUI()
     {
+        if (TutorialManager.InputLocked)
+            return;
+
         if (FlowText != null)
         {
             // Convert 0.0-1.0 factor to a realistic 0-10 g/s readout
@@ -92,6 +106,9 @@ public class KettleController : MonoBehaviour
 
     void HandlePouring()
     {
+        if (TutorialManager.InputLocked)
+            return;
+
         if (Input.GetMouseButton(0)) 
         {
             float targetAngle = Mathf.Lerp(MinTiltAngle, MaxTiltAngle, currentFlowFactor);

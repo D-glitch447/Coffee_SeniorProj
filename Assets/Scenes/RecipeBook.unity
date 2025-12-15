@@ -538,7 +538,7 @@ GameObject:
   - component: {fileID: 222363996}
   - component: {fileID: 222363995}
   m_Layer: 5
-  m_Name: Black Coffee
+  m_Name: Peru Cajamarka
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -557,11 +557,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1764300854}
+  - {fileID: 709051191}
   m_Father: {fileID: 734530859}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -254.2, y: 74.6}
+  m_AnchoredPosition: {x: -254.2, y: 70}
   m_SizeDelta: {x: 258.9, y: 19.5}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &222363995
@@ -617,7 +618,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: blackcoffee
+          m_StringArgument: peru_caj
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &222363996
@@ -713,6 +714,13 @@ PrefabInstance:
     - target: {fileID: 1806331831391570046, guid: 2320412edf3550c4ba695036d849374f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: GoBackToTOC
+      objectReference: {fileID: 0}
+    - target: {fileID: 2447560063342536058, guid: 2320412edf3550c4ba695036d849374f, type: 3}
+      propertyPath: m_text
+      value: "1. Measure 18 grams of beans\n2. Grind the beans at a coarse size \n3.
+        Heat your watter to 91C \n4. Bloom with 35g of water for 20 seconds\n5. Pour
+        slowlyin circula motions until you reach 260g of water\n6. Total brew time
+        should finish around 220 seconds"
       objectReference: {fileID: 0}
     - target: {fileID: 2447560063342536058, guid: 2320412edf3550c4ba695036d849374f, type: 3}
       propertyPath: m_fontSize
@@ -997,7 +1005,6 @@ RectTransform:
   - {fileID: 480611107}
   - {fileID: 1943696601}
   - {fileID: 1018081808}
-  - {fileID: 2073168484}
   m_Father: {fileID: 188381468}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1344,8 +1351,15 @@ PrefabInstance:
     m_TransformParent: {fileID: 1943696601}
     m_Modifications:
     - target: {fileID: 964017851251970504, guid: a874d29d9ca314441aa9f1e34867b346, type: 3}
+      propertyPath: m_text
+      value: "1. Measure out 17 grams of beans \n2. Grind the beans at a medium \n3.
+        Heat the water to 93C \n4. Pour 40g of water and let them bloom for 30 seconds\n5.
+        After bloom, pour in slow, controlled circles until you reach a total of
+        265g of water\n6. Total brew time about 205 seconds\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 964017851251970504, guid: a874d29d9ca314441aa9f1e34867b346, type: 3}
       propertyPath: m_fontSize
-      value: 16
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 964017851251970504, guid: a874d29d9ca314441aa9f1e34867b346, type: 3}
       propertyPath: m_fontAsset
@@ -1357,7 +1371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 964017851251970504, guid: a874d29d9ca314441aa9f1e34867b346, type: 3}
       propertyPath: m_fontSizeBase
-      value: 16
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 964017851251970504, guid: a874d29d9ca314441aa9f1e34867b346, type: 3}
       propertyPath: m_sharedMaterial
@@ -1901,7 +1915,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -253.1, y: -18.6}
+  m_AnchoredPosition: {x: -253.1, y: -32.8}
   m_SizeDelta: {x: 258.5, y: 43.6}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &534971726
@@ -2119,7 +2133,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -261.1, y: 36.9}
+  m_AnchoredPosition: {x: -261.1, y: 24.5}
   m_SizeDelta: {x: 263.3, y: 45.6}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &623393685
@@ -2215,6 +2229,142 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 623393683}
+  m_CullTransparentMesh: 1
+--- !u!1 &709051190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 709051191}
+  - component: {fileID: 709051193}
+  - component: {fileID: 709051192}
+  m_Layer: 5
+  m_Name: Text (TMP) (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &709051191
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709051190}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 222363994}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 26.080078, y: -10.3}
+  m_SizeDelta: {x: 296.01, y: 42.4564}
+  m_Pivot: {x: 0, y: 0.5}
+--- !u!114 &709051192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709051190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Cajamarka
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: de3d052bb687f4c42a985aa974efb372, type: 2}
+  m_sharedMaterial: {fileID: 5226327059443595943, guid: de3d052bb687f4c42a985aa974efb372, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4281479730
+  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 18
+  m_fontSizeBase: 18
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 0
+  m_fontSizeMax: 0
+  m_fontStyle: 1
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 0
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &709051193
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709051190}
   m_CullTransparentMesh: 1
 --- !u!1001 &718161934
 PrefabInstance:
@@ -2371,6 +2521,13 @@ PrefabInstance:
     - target: {fileID: 4699148487777237226, guid: 2a78b2943f434574f93f2f7a8f3713c1, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -52.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400067852984575292, guid: 2a78b2943f434574f93f2f7a8f3713c1, type: 3}
+      propertyPath: m_text
+      value: "1. Measure 18 grams of beans\n2. Grind the beans at a medium setting
+        \n3. Heat your water to 94C\n4. Add grounds and start the bloom with 40g
+        of water for 30 seconds\n5. Pour in slow circles, adding water up to 250g
+        total\n6. Total brew time should be around 210 seconds"
       objectReference: {fileID: 0}
     - target: {fileID: 5400067852984575292, guid: 2a78b2943f434574f93f2f7a8f3713c1, type: 3}
       propertyPath: m_fontSize
@@ -2617,7 +2774,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -255.7, y: -68.1}
+  m_AnchoredPosition: {x: -255.7, y: -86.3}
   m_SizeDelta: {x: 260.3, y: 41}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &814383299
@@ -2856,6 +3013,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1943696601}
     m_Modifications:
+    - target: {fileID: 746322194045703828, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 5357344942237386501, guid: a33e394eebc235c4bbc7a5007ab48691, type: 3}
+    - target: {fileID: 910081801087843307, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -19.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1081327992766148887, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_text
+      value: '- Smoky
+
+        - Cocoa
+
+        - Bold body '
+      objectReference: {fileID: 0}
     - target: {fileID: 1081327992766148887, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_fontSize
       value: 18
@@ -2864,6 +3037,10 @@ PrefabInstance:
       propertyPath: m_fontAsset
       value: 
       objectReference: {fileID: 11400000, guid: de3d052bb687f4c42a985aa974efb372, type: 2}
+    - target: {fileID: 1081327992766148887, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1081327992766148887, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_fontSizeBase
       value: 18
@@ -2875,6 +3052,15 @@ PrefabInstance:
     - target: {fileID: 1081327992766148887, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221690574455141239, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_text
+      value: '- 20g Peru Cajamarka Beans
+
+        - 320g Hot Water
+
+        - Coffee
+        Filter '
       objectReference: {fileID: 0}
     - target: {fileID: 1221690574455141239, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_fontSize
@@ -3005,8 +3191,15 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2824588884058083484, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_text
+      value: "1. Measure 15 grams of beans on the scale\n2. Grind the beans to coarse
+        \n3. Heat your water to 90C\n4. Add coffee to the dripper and start a 20-second
+        bloom with 35g of water.\n5. After bloom, pour slowly in spirals until you
+        reach 320g total water\n6. Total brew time about 150 seconds"
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824588884058083484, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_fontSize
-      value: 18
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 2824588884058083484, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_fontAsset
@@ -3018,7 +3211,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2824588884058083484, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_fontSizeBase
-      value: 18
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 2824588884058083484, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_sharedMaterial
@@ -3027,6 +3220,12 @@ PrefabInstance:
     - target: {fileID: 2824588884058083484, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2835015249151030395, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_text
+      value: 'Flavor Notes
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 2835015249151030395, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_fontAsset
@@ -3082,11 +3281,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3511006823689220418, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_Name
-      value: BlackCoffee_Page
+      value: Peru_Caj_Page
       objectReference: {fileID: 0}
     - target: {fileID: 3511006823689220418, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4862810809475067148, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 164.5
       objectReference: {fileID: 0}
     - target: {fileID: 4898145861240486832, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3107,6 +3310,10 @@ PrefabInstance:
     - target: {fileID: 6085895161943554423, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -125
+      objectReference: {fileID: 0}
+    - target: {fileID: 6178407294930771840, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_Name
+      value: FlavorNotes
       objectReference: {fileID: 0}
     - target: {fileID: 6664033318661861599, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_fontAsset
@@ -3139,6 +3346,10 @@ PrefabInstance:
     - target: {fileID: 7960542133409657301, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: GoBackToTOC
+      objectReference: {fileID: 0}
+    - target: {fileID: 8396392035279820105, guid: 630911ca607dc3347b4692f4ef6c6d74, type: 3}
+      propertyPath: m_Name
+      value: FlavorNotesText
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3562,8 +3773,15 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4312261890930794702, guid: fde8e2386784346488faad01db5d648b, type: 3}
+      propertyPath: m_text
+      value: "1. Measure 20g of Brazil Santos beans\n2. Grind the coffee at a medium-coarse
+        level \n3.Heat water to 92C\n4. Start with a 38g bloom and wait 25 seconds
+        \n5. Continue pouring in slow circular motions until you reach 300g total
+        water\n6. Total brew time about 200 seconds"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4312261890930794702, guid: fde8e2386784346488faad01db5d648b, type: 3}
       propertyPath: m_fontSize
-      value: 17
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 4312261890930794702, guid: fde8e2386784346488faad01db5d648b, type: 3}
       propertyPath: m_fontAsset
@@ -3575,7 +3793,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4312261890930794702, guid: fde8e2386784346488faad01db5d648b, type: 3}
       propertyPath: m_fontSizeBase
-      value: 17
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 4312261890930794702, guid: fde8e2386784346488faad01db5d648b, type: 3}
       propertyPath: m_sharedMaterial
@@ -3878,6 +4096,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1377774887443547803, guid: 8e660add25809e246b326474ba826992, type: 3}
+      propertyPath: m_Name
+      value: FlavorNotesText
+      objectReference: {fileID: 0}
     - target: {fileID: 1806988616964023105, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_Name
       value: EthioYir_Page
@@ -3892,7 +4114,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2334594668659665710, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -38
+      value: -32.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 2419441534080952774, guid: 8e660add25809e246b326474ba826992, type: 3}
+      propertyPath: m_text
+      value: Flavor Notes
       objectReference: {fileID: 0}
     - target: {fileID: 2419441534080952774, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_fontAsset
@@ -3949,6 +4175,10 @@ PrefabInstance:
     - target: {fileID: 3054677532724195494, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3720459048237552741, guid: 8e660add25809e246b326474ba826992, type: 3}
+      propertyPath: m_Name
+      value: FlavorNotes
       objectReference: {fileID: 0}
     - target: {fileID: 4834608442655910789, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_Pivot.x
@@ -4039,8 +4269,15 @@ PrefabInstance:
       value: GoBackToTOC
       objectReference: {fileID: 0}
     - target: {fileID: 6143699556814596464, guid: 8e660add25809e246b326474ba826992, type: 3}
+      propertyPath: m_text
+      value: "1. Measure 15 grams of beans on the scale\n2. Grind the beans to medium-fine
+        \n3. Heat your water to 93C\n4. Add coffee to the dripper and start a 40-second
+        bloom with 45g of water.\n5. After bloom, pour slowly in spirals until you
+        reach 240g total water\n6. Total brew time about 180 seconds"
+      objectReference: {fileID: 0}
+    - target: {fileID: 6143699556814596464, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_fontSize
-      value: 16
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 6143699556814596464, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_fontAsset
@@ -4052,7 +4289,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6143699556814596464, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_fontSizeBase
-      value: 16
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 6143699556814596464, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_sharedMaterial
@@ -4097,6 +4334,14 @@ PrefabInstance:
     - target: {fileID: 7496234523217505834, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: BeginButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8553591919797764012, guid: 8e660add25809e246b326474ba826992, type: 3}
+      propertyPath: m_text
+      value: '- Cirtrus
+
+        - Floral
+
+        - Bright acidity'
       objectReference: {fileID: 0}
     - target: {fileID: 8553591919797764012, guid: 8e660add25809e246b326474ba826992, type: 3}
       propertyPath: m_fontSize
@@ -4962,6 +5207,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8958907820937638348, guid: 1a0155866d5d910498632965230b9719, type: 3}
+      propertyPath: m_text
+      value: "1. Measure 16 grams of Kenya AA beans \n2. Grind the beans medium-fine\n3.
+        Heat your water to 95C \n4. Bloom with 45g of water for 35 seconds\n5. Pour
+        evenly in small spirals up to 250g total water\n6. Total brew time for 190
+        seconds "
+      objectReference: {fileID: 0}
+    - target: {fileID: 8958907820937638348, guid: 1a0155866d5d910498632965230b9719, type: 3}
       propertyPath: m_fontSize
       value: 18
       objectReference: {fileID: 0}
@@ -5083,7 +5335,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Blend Coffee ........... 6
+  m_text: Peru         ........... 6
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: de3d052bb687f4c42a985aa974efb372, type: 2}
   m_sharedMaterial: {fileID: 5226327059443595943, guid: de3d052bb687f4c42a985aa974efb372, type: 2}
@@ -5575,7 +5827,7 @@ MonoBehaviour:
   recipeDatabase: {fileID: 11400000, guid: d681e0acb8f286448b02a3ecb53c00cd, type: 2}
   activeRecipe: {fileID: 0}
   recipePages:
-  - recipeName: blackcoffee
+  - recipeName: peru_caj
     page: {fileID: 938409919}
   - recipeName: EthiYir
     page: {fileID: 1176197009}
@@ -5994,68 +6246,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &2073168483
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2073168484}
-  - component: {fileID: 2073168485}
-  m_Layer: 5
-  m_Name: CoffeeRuntime
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2073168484
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2073168483}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 343256998}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2073168485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2073168483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b241bac859044be4ca32fdcb413cc0df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CoffeeRuntime
-  activeRecipe: {fileID: 0}
-  playerFinalWeight: 0
-  playerGrindSize: 0
-  playerWaterTemp: 0
-  playerWaterWeight: 0
-  playerBrewTime: 0
-  grindPenalty: 0
-  hasCompletedScale: 0
-  hasCompletedGrind: 0
-  hasCompletedMeasuringWater: 0
-  hasCompleteHeating: 0
-  hasCompletedBrewing: 0
-  kitchenState: 0
-  prepRoomState: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

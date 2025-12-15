@@ -15,7 +15,11 @@ MonoBehaviour:
   recipeName: SumaMand
   brewTimeSeconds: 220
   waterTemperatureCelsius: 91
-  grindSize: 4
+  idealGrindSize: 6
   coffeeWeightGrams: 18
   waterWeightGrams: 260
+  bloomWaterGrams: 35
+  bloomDurationSeconds: 20
+  requiresGentlePour: 1
+  optimalPattern: 0
   flavorNotes: Earthy, herbal, thick body

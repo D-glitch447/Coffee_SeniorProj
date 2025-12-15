@@ -16,7 +16,8 @@ public class FinishPourOver : MonoBehaviour
 
     void Start()
     {
-        if (bedManager == null) bedManager = FindObjectOfType<CoffeeBedManager>();
+        if (bedManager == null) bedManager = Object.FindFirstObjectByType<CoffeeBedManager>();
+
 
         if (FinishButton != null)
         {
@@ -28,14 +29,16 @@ public class FinishPourOver : MonoBehaviour
         }
     }
 
-    void OnFinishClicked()
+    public void OnFinishClicked()
     {
         // 1. Save Data to CoffeeRuntime
         if (CoffeeRuntime.Instance != null && bedManager != null)
         {
             // --- Save Raw Stats ---
-            CoffeeRuntime.Instance.playerFinalWeight = bedManager.CurrentWaterInGrams;
+            CoffeeRuntime.Instance.playerWaterWeight = bedManager.CurrentWaterInGrams;
             CoffeeRuntime.Instance.playerBrewTime = bedManager.brewTimer;
+            CoffeeRuntime.Instance.playerBloomWaterUsed = bedManager.BloomTargetWeight;
+            CoffeeRuntime.Instance.playerBloomDuration = bedManager.BloomDuration;
 
             // --- Save Calculated Component Scores (Crucial for Grading Scene) ---
             // We force a calculation just in case the state machine didn't reach 'Finished' yet

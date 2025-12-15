@@ -24,9 +24,11 @@ public class finalBeanWeight : MonoBehaviour
 
         // 3. Mark scale step as completed
         CoffeeRuntime.Instance.hasCompletedScale = true;
-
+        CoffeeRuntime.Instance.beanWeightLocked = true;
+        
         Debug.Log("Scale finished. Final Weight = " + finalWeight);
 
+        Debug.Log($"[SCALING DONE] Weight={finalWeight} | Time={Time.time}");
         // 4. Return to kitchen scene
         SceneManager.LoadScene("MeasuringWater");
     }
