@@ -32,6 +32,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MeasuringWater.unity
     guid: b59cc1de85062e04aa63dbc9a34cb258
+  - enabled: 1
+    path: Assets/Scenes/CoffeeScore.unity
+    guid: 14a0ec7af02ed1e48b003bf5b405ab23
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

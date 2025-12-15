@@ -15,7 +15,11 @@ MonoBehaviour:
   recipeName: KenAA
   brewTimeSeconds: 190
   waterTemperatureCelsius: 95
-  grindSize: 5
+  idealGrindSize: 3
   coffeeWeightGrams: 16
   waterWeightGrams: 250
+  bloomWaterGrams: 45
+  bloomDurationSeconds: 35
+  requiresGentlePour: 1
+  optimalPattern: 0
   flavorNotes: Berry, floral, winey

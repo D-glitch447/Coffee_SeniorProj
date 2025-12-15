@@ -242,6 +242,9 @@ MonoBehaviour:
   grinderHandle: {fileID: 314140725}
   otherObjectsToActivate:
   - {fileID: 0}
+  fineDialogue: {fileID: 11400000, guid: 30aed6881949c4941882b7129da4627b, type: 2}
+  mediumDialogue: {fileID: 11400000, guid: df51dac0fecdd6642bc75df86e5fbc70, type: 2}
+  coarseDialogue: {fileID: 11400000, guid: ef0028f39b97c3848b14eeafc5f2bc37, type: 2}
   objectToDeactivate: {fileID: 195197193}
 --- !u!61 &133229762
 BoxCollider2D:
@@ -555,9 +558,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1288738581}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 88, y: -414.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 8.3, y: 40.399994}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &138298626
@@ -629,7 +632,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -684,6 +687,7 @@ GameObject:
   m_Component:
   - component: {fileID: 195197194}
   - component: {fileID: 195197195}
+  - component: {fileID: 195197196}
   m_Layer: 0
   m_Name: GrinderManager
   m_TagString: Untagged
@@ -703,6 +707,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1306520187}
   - {fileID: 1845009620}
   - {fileID: 653221095}
   m_Father: {fileID: 1288738581}
@@ -725,9 +730,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrinderAdjustment
   grindLabel: {fileID: 1306520188}
-  handleObject: {fileID: 979441526}
-  emptyGrinderScrew: {fileID: 1576209593}
-  rotationAmount: 45
+--- !u!114 &195197196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195197193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5753ed185aa196a43826826e13c56cac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrinderSizeTutorialHandler
+  fineDialogue: {fileID: 11400000, guid: 30aed6881949c4941882b7129da4627b, type: 2}
+  mediumDialogue: {fileID: 11400000, guid: df51dac0fecdd6642bc75df86e5fbc70, type: 2}
+  coarseDialogue: {fileID: 11400000, guid: ef0028f39b97c3848b14eeafc5f2bc37, type: 2}
 --- !u!1 &314140725
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,15 +776,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0674c71fcf9987f438231cd9c58b1698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalGrindRequired: 3600
+  degreesPerGram: 180
   targetGrams: 20
-  fullGrinderObject: {fileID: 1321968342}
-  emptyGrinderObject: {fileID: 1177458135}
+  totalGrindRequired: 3600
+  currentGrams: 0
   audioSource: {fileID: 314140729}
   grindingSound: {fileID: 8300000, guid: 97276dfec1b377241935df959fba5a23, type: 3}
   emptyGrinderSound: {fileID: 8300000, guid: ac192950412b7ae4a9f34d97e3fbc469, type: 3}
   progressFillImage: {fileID: 0}
   grindAmountText: {fileID: 138298627}
+  grindSpeedThreshold: 800
+  grindDriftRate: 0.35
+  grinderHandle: {fileID: 2037491667}
 --- !u!224 &314140727
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1105,16 +1125,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 411167130}
   m_LocalRotation: {x: 0.22069705, y: -0.97534084, z: -0.00038520276, w: 0.0017023516}
-  m_LocalPosition: {x: 0, y: 0, z: -9740}
-  m_LocalScale: {x: 75, y: 75, z: 108}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 35, y: 35, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1288738581}
   m_LocalEulerAnglesHint: {x: 0, y: -179.8, z: -25.5}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 225, y: 288}
-  m_SizeDelta: {x: 4.33, y: 5.69}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -281.8, y: 100}
+  m_SizeDelta: {x: 4.3299866, y: 5.6900024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &411167133
 SpriteRenderer:
@@ -1160,8 +1180,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1186629019
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 1889403613216779837, guid: 62580f184b14eaa4196d397ec1aded63, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1174,71 +1194,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &485466700
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 485466702}
-  - component: {fileID: 485466703}
-  m_Layer: 0
-  m_Name: CoffeeManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &485466702
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485466700}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.73889, y: -1.6902401, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &485466703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485466700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b241bac859044be4ca32fdcb413cc0df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CoffeeRuntime
-  activeRecipe: {fileID: 0}
-  playerFinalWeight: 0
-  playerGrindAmount: 0
-  playerGrindSizeIndex: 0
-  playerGrindSizeName: 
-  playerWaterTemp: 0
-  playerWaterWeight: 0
-  playerBrewTime: 0
-  grindPenalty: 0
-  scoreWeight: 0
-  scoreSaturation: 0
-  scoreTechnique: 0
-  scoreTime: 0
-  scoreImpatiencePenalty: 0
-  hasCompletedScale: 0
-  hasCompletedGrind: 0
-  hasCompletedMeasuringWater: 0
-  hasCompleteHeating: 0
-  hasCompletedBrewing: 0
-  kitchenState: 0
-  prepRoomState: 0
 --- !u!1 &653221094
 GameObject:
   m_ObjectHideFlags: 0
@@ -1266,17 +1221,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 653221094}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -9720}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1306520187}
+  m_Children: []
   m_Father: {fileID: 195197194}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -662, y: -320.79}
-  m_SizeDelta: {x: 8, y: 8}
+  m_AnchoredPosition: {x: -258.2, y: -129.4}
+  m_SizeDelta: {x: 45, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &653221097
 MonoBehaviour:
@@ -1291,7 +1245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -1329,7 +1283,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: -1
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1491,7 +1445,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1019397030}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1500,8 +1454,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.21496582, y: 0}
+  m_SizeDelta: {x: -0.42993164, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1019397032
 MonoBehaviour:
@@ -1576,11 +1530,11 @@ RectTransform:
   - {fileID: 136858480}
   m_Father: {fileID: 1288738581}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 855, y: -442}
-  m_SizeDelta: {x: 105, y: 105}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -20.299988, y: 23.679993}
+  m_SizeDelta: {x: 50, y: 50}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &1135365937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1997,7 +1951,7 @@ GameObject:
   - component: {fileID: 1306520189}
   - component: {fileID: 1306520188}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: Grind
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2010,18 +1964,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1306520186}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 653221095}
+  m_Father: {fileID: 195197194}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -8.227, y: 6.89}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -369.2, y: -47.72}
   m_SizeDelta: {x: 244.54, y: 38.17}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1306520188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2069,8 +2023,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2107,7 +2061,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0.6566267, z: 0, w: 0}
+  m_margin: {x: 0, y: 4.511755, z: 5.3172455, w: -3.8971858}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2303,6 +2257,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1534863304
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1534863306}
+  - component: {fileID: 1534863305}
+  m_Layer: 0
+  m_Name: GrinderIntroTutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1534863305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534863304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71464d16f9d9ec241a9e6753b98b282a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrinderIntroTutorialHandler
+  introDialogue: {fileID: 11400000, guid: e482cb5cb17e4934092f6686ae753600, type: 2}
+  dialogueSize: {x: 829.3, y: 149.2}
+  dialoguePosition: {x: 0, y: -92.6}
+--- !u!4 &1534863306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534863304}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 43.9191, y: 93.08246, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1576209592
 GameObject:
   m_ObjectHideFlags: 0
@@ -2446,16 +2447,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1622312704}
   m_LocalRotation: {x: 0.9792789, y: 0.19390231, z: 0.05732221, w: 0.011350096}
-  m_LocalPosition: {x: 0, y: 0, z: -9749}
-  m_LocalScale: {x: 75, y: 75, z: 108}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 35, y: 35, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1288738581}
   m_LocalEulerAnglesHint: {x: 0, y: -186.7, z: -202.4}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -207, y: -296}
-  m_SizeDelta: {x: 4.33, y: 5.69}
+  m_AnchoredPosition: {x: -82.6, y: -104.6}
+  m_SizeDelta: {x: 4.3299866, y: 5.6900024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1622312707
 SpriteRenderer:
@@ -2501,8 +2502,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1186629019
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 1889403613216779837, guid: 62580f184b14eaa4196d397ec1aded63, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2542,17 +2543,17 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1845009619}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -9720}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 195197194}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -827, y: -320.79}
-  m_SizeDelta: {x: 8, y: 8}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -318.9, y: -102}
+  m_SizeDelta: {x: 45, y: 45}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1845009622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2566,7 +2567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -2604,7 +2605,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: -1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2901,10 +2902,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 359522079}
-  - {fileID: 1377373857}
   - {fileID: 1288738581}
-  - {fileID: 485466702}
   - {fileID: 133229756}
   - {fileID: 1321968343}
   - {fileID: 314140727}
   - {fileID: 2121279594}
+  - {fileID: 1377373857}
+  - {fileID: 1534863306}

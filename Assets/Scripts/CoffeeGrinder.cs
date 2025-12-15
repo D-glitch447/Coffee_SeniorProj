@@ -5,18 +5,12 @@ using TMPro;
 public class CoffeeGrinder : MonoBehaviour
 {
     [Header("Grind Difficulty")]
-    // How much rotation (in degrees) is needed to grind 1 gram?
-    // 3600 degrees (10 full circles) for 20g = 180 degrees per gram.
-    public float degreesPerGram = 180f; 
-    
-    [Header("Live Data (Read Only)")]
-    public float targetGrams = 20.0f; // Will be overwritten by Recipe
-    public float totalGrindRequired;  // Calculated based on target
-    public float currentGrams = 0f;
+    public float degreesPerGram = 180f;
 
-    [Header("Visuals (GameObjects)")]
-    public GameObject fullGrinderObject;
-    public GameObject emptyGrinderObject;
+    [Header("Live Data (Read Only)")]
+    public float targetGrams;
+    public float totalGrindRequired;
+    public float currentGrams = 0f;
 
     [Header("Audio")]
     public AudioSource audioSource;
@@ -27,53 +21,75 @@ public class CoffeeGrinder : MonoBehaviour
     public Image progressFillImage;
     public TextMeshProUGUI grindAmountText;
 
-    // Private variables
-    private float currentGrindProgress = 0f; // Total degrees rotated so far
+    // --- Existing ---
+    private float currentGrindProgress = 0f;
     private bool hasReachedOptimalGrind = false;
-    private float lastGrindTime; 
+    private float lastGrindTime;
+
+    // ✅ ADDED – technique simulation
+    [Header("Technique Simulation")]
+    public float grindSpeedThreshold = 800f;
+    public float grindDriftRate = 0.35f;
+    private float grindSizeError = 0f;
+
+    [SerializeField] private GrinderHandle grinderHandle; 
+    private float grindStartTime;
+    private bool grindStarted = false;
+
 
     private void Start()
     {
-        // 1. LOAD TARGET FROM RECIPE
-        if (CoffeeRuntime.Instance != null && CoffeeRuntime.Instance.activeRecipe != null)
+        Debug.Log("[CoffeeGrinder] Start() fired");
+
+        if(CoffeeRuntime.Instance.playerFinalWeight > 0f)
+        {
+            targetGrams = CoffeeRuntime.Instance.playerFinalWeight;
+        } 
+        else if (CoffeeRuntime.Instance.activeRecipe != null)
         {
             targetGrams = CoffeeRuntime.Instance.activeRecipe.coffeeWeightGrams;
         }
 
-        // 2. Calculate total rotation needed based on target
         totalGrindRequired = targetGrams * degreesPerGram;
 
-        // 3. Reset UI
         if (progressFillImage != null) progressFillImage.fillAmount = 0;
         if (audioSource != null) audioSource.loop = true;
-        
+
         UpdateGrindText();
     }
 
     private void Update()
     {
-        // Audio Timeout Logic
         if (Time.time - lastGrindTime > 0.1f)
         {
             if (audioSource != null && audioSource.isPlaying)
-            {
                 audioSource.Pause();
-            }
         }
     }
 
-    // Called by GrinderHandle.cs
     public void AddGrindProgress(float angleAmount)
     {
+         if (!grindStarted)
+        {
+            grindStarted = true;
+            grindStartTime = Time.time;
+        }
+
         lastGrindTime = Time.time;
         PlayGrindSound();
 
-        // Allow grinding as long as we haven't finished
         if (!hasReachedOptimalGrind && angleAmount > 0)
         {
+            // ✅ Technique drift
+            float speed = angleAmount / Time.deltaTime;
+
+            if (speed > grindSpeedThreshold)
+                grindSizeError -= grindDriftRate * Time.deltaTime;
+            else
+                grindSizeError += grindDriftRate * Time.deltaTime * 0.5f;
+
             currentGrindProgress += angleAmount;
 
-            // Cap progress at 100%
             if (currentGrindProgress >= totalGrindRequired)
             {
                 currentGrindProgress = totalGrindRequired;
@@ -81,13 +97,11 @@ public class CoffeeGrinder : MonoBehaviour
                 OnGrindComplete();
             }
 
-            // Update Calculations
             currentGrams = (currentGrindProgress / totalGrindRequired) * targetGrams;
 
-            // Update UI
             if (progressFillImage != null)
                 progressFillImage.fillAmount = currentGrindProgress / totalGrindRequired;
-            
+
             UpdateGrindText();
         }
     }
@@ -95,11 +109,12 @@ public class CoffeeGrinder : MonoBehaviour
     private void PlayGrindSound()
     {
         if (audioSource == null) return;
-        AudioClip correctClip = hasReachedOptimalGrind ? emptyGrinderSound : grindingSound;
 
-        if (audioSource.clip != correctClip)
+        AudioClip clip = hasReachedOptimalGrind ? emptyGrinderSound : grindingSound;
+
+        if (audioSource.clip != clip)
         {
-            audioSource.clip = correctClip;
+            audioSource.clip = clip;
             audioSource.Play();
         }
         else if (!audioSource.isPlaying)
@@ -107,26 +122,60 @@ public class CoffeeGrinder : MonoBehaviour
             audioSource.Play();
         }
     }
-
     private void OnGrindComplete()
     {
-        Debug.Log("Grinding Complete!");
-        // Optional: Auto-hide visuals, or wait for player to click Finish
-        // if (fullGrinderObject != null) fullGrinderObject.SetActive(false);
-        // if (emptyGrinderObject != null) emptyGrinderObject.SetActive(true);
+        float selected = CoffeeRuntime.Instance.playerSelectedGrindIndex;
+
+        // ✅ SAFETY (prevents default-4 confusion)
+        if (selected <= 0)
+            selected = 4f;
+
+        float actual = Mathf.Clamp(selected + grindSizeError, 1f, 8f);
+
+        CoffeeRuntime.Instance.playerActualGrindValue = actual;
+        CoffeeRuntime.Instance.playerGrindAmount = currentGrams;
+        CoffeeRuntime.Instance.hasCompletedGrind = true;
+        CoffeeRuntime.Instance.playerGrindDuration = Time.time - grindStartTime;
+
+         if (grinderHandle != null)
+            grinderHandle.FinalizeGrindStats();
+        GrindEvaluator.Evaluate();
+
+        Debug.Log($"Grinding Complete | Ideal {selected} → Actual {actual:F2}");
     }
+
+    // private void OnGrindComplete()
+    // {
+    //     float selected = CoffeeRuntime.Instance.playerSelectedGrindIndex;
+    //     if (selected <= 0)
+    //         selected = 4f; // Medium fallback
+
+    //     float actual = Mathf.Clamp(selected + grindSizeError, 1f, 8f);
+
+    //     // float selected = CoffeeRuntime.Instance.playerSelectedGrindIndex;
+    //     // float actual = Mathf.Clamp(selected + grindSizeError, 1f, 8f);
+
+    //     CoffeeRuntime.Instance.playerActualGrindValue = actual;
+    //     CoffeeRuntime.Instance.playerGrindAmount = currentGrams;
+    //     CoffeeRuntime.Instance.hasCompletedGrind = true;
+
+    //     GrindEvaluator.Evaluate();
+
+    //     Debug.Log($"Grinding Complete | Selected {selected} → Actual {actual:F2}");
+    //     Debug.Log($"Selected: {CoffeeRuntime.Instance.playerSelectedGrindIndex}");
+    //     Debug.Log($"Actual: {CoffeeRuntime.Instance.playerActualGrindValue}");
+    //     Debug.Log($"Score: {CoffeeRuntime.Instance.scoreTechnique}");
+    // }
 
     private void UpdateGrindText()
     {
         if (grindAmountText != null)
-        {
-            // Format: "12.5g / 20.0g"
             grindAmountText.text = $"{currentGrams:F1}g / {targetGrams:F1}g";
-        }
     }
-
     public float GetCurrentGrams()
     {
         return currentGrams;
     }
+
 }
+

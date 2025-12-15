@@ -8,6 +8,7 @@ public class KettleDrag : MonoBehaviour
 
     private Rigidbody2D rb;
     private bool isDragging = false;
+    private bool isSnapped = false;
     private Vector3 offset;
     public AudioSource KettleTap;
     public AudioClip KettleTapClip;
@@ -29,6 +30,10 @@ public class KettleDrag : MonoBehaviour
     void OnMouseDown()
     {
         if(TutorialManager.InputLocked) return;
+
+        if(isSnapped) 
+            return;
+
         isDragging = true;
         offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -44,6 +49,11 @@ public class KettleDrag : MonoBehaviour
 
         bool snappedLeft = TrySnapToBurner(leftBurner);
         bool snappedRight = TrySnapToBurner(rightBurner);
+
+        if(snappedLeft || snappedRight)
+        {
+            isSnapped = true;
+        }
     }
 
     void Update()
@@ -76,6 +86,7 @@ public class KettleDrag : MonoBehaviour
     private void ResetKettle()
     {
         isDragging = false;
+        isSnapped = false;
 
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;

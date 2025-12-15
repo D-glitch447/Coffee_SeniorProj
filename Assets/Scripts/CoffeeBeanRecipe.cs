@@ -16,9 +16,14 @@ public class CoffeeBeanRecipe : ScriptableObject
     [Header("Brewing Specs")]
     public float brewTimeSeconds;
     public float waterTemperatureCelsius;
-    public float grindSize;
+    public GrindSize idealGrindSize;
+    // public float grindSize;
     public float coffeeWeightGrams;
     public float waterWeightGrams;
+
+    [Header("Bloom Specs")]
+    public float bloomWaterGrams = 40f;
+    public float bloomDurationSeconds = 30f;
 
     [Header("Technique Specs")]
     [Tooltip("If true, pouring too fast reduces score.")]

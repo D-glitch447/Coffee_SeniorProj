@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   messages:
   - '"Oh...you thought you were done with this step..far from it"'
-  - '"You can''t have coffee without water...there is a reason it''s called dirty
-    bean water"'
-  - '"Let''s go to the sink to start getting that water" '
+  - '"You can''t have coffee without water...there is a reason it''s nicknamed DIRTY
+    BEAN WATER"'
+  - '"Let''s go to the sink to get that water" '

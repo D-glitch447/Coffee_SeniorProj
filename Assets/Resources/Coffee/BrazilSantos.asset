@@ -15,7 +15,11 @@ MonoBehaviour:
   recipeName: BrazSan
   brewTimeSeconds: 200
   waterTemperatureCelsius: 92
-  grindSize: 6
+  idealGrindSize: 5
   coffeeWeightGrams: 20
   waterWeightGrams: 300
+  bloomWaterGrams: 38
+  bloomDurationSeconds: 25
+  requiresGentlePour: 1
+  optimalPattern: 0
   flavorNotes: Chocolate, mild acidity

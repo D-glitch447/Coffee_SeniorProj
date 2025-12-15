@@ -7,7 +7,6 @@ public class FinalGrind : MonoBehaviour
     [Header("Dependencies")]
     public FadeController fade;          // Drag your FadePanel/Controller here
     public CoffeeGrinder coffeeGrinder;  // Drag the object with CoffeeGrinder.cs here
-    public GrinderAdjustment grinderAdjustment; // Drag the object with GrinderAdjustment.cs here
 
     [Header("Scene Settings")]
     public string nextSceneName = "NextSceneName"; // Type the exact name of the next scene
@@ -37,19 +36,6 @@ public class FinalGrind : MonoBehaviour
                 // CoffeeRuntime.Instance.targetGrindAmount = coffeeGrinder.targetGrams;
                 
                 Debug.Log($"Saved Grind Amount: {finalGrams}g");
-            }
-
-            // --- Capture Grind Size ---
-            if (grinderAdjustment != null)
-            {
-                // We'll get the index (0, 1, 2) and the string name
-                int sizeIndex = grinderAdjustment.GetCurrentGrindIndex();
-                string sizeName = grinderAdjustment.GetCurrentGrindName();
-
-                CoffeeRuntime.Instance.playerGrindSizeIndex = sizeIndex;
-                CoffeeRuntime.Instance.playerGrindSizeName = sizeName;
-
-                Debug.Log($"Saved Grind Size: {sizeName} (Index: {sizeIndex})");
             }
 
             // 3. Mark step as completed

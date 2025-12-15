@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Kitchen_AfterBrewing_Dialogue
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   messages:
-  - '"WOW, YOU DID IT!!!"'
+  - '"WOW, YOU DID IT!!! I totally knew you would do it..."'
   - '"Let''s click that coffee cup to see how well...or how terrible you made your
     coffee"'

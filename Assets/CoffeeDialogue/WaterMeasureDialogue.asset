@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: WaterMeasureDialogue
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   messages:
-  - '"We can''t make coffee without water of course, so naturally let''s measure
-    that water"'
-  - '"This one is simple, just click the handle and water will come out"'
-  - '"Watch the fill bar next to the kettle carefully..you can''t dump water since
-    that would be a waste of course" '
+  - '"Good you didn''t get lost, here is your sink, and the kettle is already there
+    for you"'
+  - '"Click or use arrow keys to turn on the faucet so we can start getting some
+    water"'
+  - '"Watch the fill bar next to the kettle carefully..you can''t dump water, don''t
+    want waste it afterall"'

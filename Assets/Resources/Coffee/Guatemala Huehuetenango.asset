@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a97f42237962abf4f9dc3232163d9c1f, type: 3}
+  m_Name: Guatemala Huehuetenango
+  m_EditorClassIdentifier: Assembly-CSharp::CoffeeBeanRecipe
+  recipeName: Guate_Hue
+  brewTimeSeconds: 210
+  waterTemperatureCelsius: 96
+  idealGrindSize: 3
+  coffeeWeightGrams: 22
+  waterWeightGrams: 360
+  bloomWaterGrams: 45
+  bloomDurationSeconds: 40
+  requiresGentlePour: 1
+  optimalPattern: 0
+  flavorNotes: citrus, honey, clean finish

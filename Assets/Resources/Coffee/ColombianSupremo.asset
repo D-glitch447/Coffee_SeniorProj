@@ -15,7 +15,9 @@ MonoBehaviour:
   recipeName: ColomSup
   brewTimeSeconds: 210
   waterTemperatureCelsius: 94
-  grindSize: 5
+  idealGrindSize: 4
   coffeeWeightGrams: 18
   waterWeightGrams: 250
+  requiresGentlePour: 1
+  optimalPattern: 0
   flavorNotes: Nutty, caramel

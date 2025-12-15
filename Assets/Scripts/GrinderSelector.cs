@@ -7,11 +7,18 @@ public class GrinderSelector : MonoBehaviour
     [SerializeField] private GameObject grinderHandle;
     [SerializeField] private GameObject[] otherObjectsToActivate;
 
+    [Header("Dialogue")]
+    [SerializeField] private DialogueData fineDialogue;
+    [SerializeField] private DialogueData mediumDialogue;
+    [SerializeField] private DialogueData coarseDialogue;
+
     [Header("Objects to Turn OFF")]
     // Drag the object you want to deactivate here (e.g., the label or arrow)
     [SerializeField] private GameObject objectToDeactivate; 
 
     private AudioSource audioSource;
+
+    private bool hasShownDialogue = false;
 
     void Start()
     {
@@ -20,6 +27,9 @@ public class GrinderSelector : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (TutorialManager.InputLocked)
+            return;
+
         // --- 1. PLAY SOUND ---
         // We use PlayClipAtPoint so the sound finishes playing even if this object turns off immediately.
         if (audioSource != null && audioSource.clip != null)
@@ -46,5 +56,28 @@ public class GrinderSelector : MonoBehaviour
         // --- 4. DEACTIVATE SELF ---
         // This hides the empty grinder button
         gameObject.SetActive(false);
+
+         // mark grind as intentionally started
+        CoffeeRuntime.Instance.hasCompletedGrind = true;
+
+        //SHOW GRIND DIALOGUE ONCE
+        if (!hasShownDialogue)
+         {
+            ShowGrindDialogue();
+            hasShownDialogue = true;
+            return; // stop activation until dialogue finishes
+        }
     }
+    private void ShowGrindDialogue()
+    {
+        int grindIndex = CoffeeRuntime.Instance.playerSelectedGrindIndex;
+
+        if (grindIndex <= 3)
+            TutorialManager.Instance.StartDialogue(fineDialogue.messages);
+        else if (grindIndex <= 4)
+            TutorialManager.Instance.StartDialogue(mediumDialogue.messages);
+        else if (grindIndex <= 7)
+            TutorialManager.Instance.StartDialogue(coarseDialogue.messages);
+    }
+
 }

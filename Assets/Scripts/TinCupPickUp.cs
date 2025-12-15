@@ -61,6 +61,9 @@ public class TinCupPickup : MonoBehaviour
             pickupAudio.pitch = Random.Range(0.9f, 1.1f); 
             pickupAudio.PlayOneShot(beanPickupClip);
         }
+        // Subtract weight
+        ScaleController.Instance.RemoveWeight(beanWeight);
+        
         Debug.Log("Picked up bean — weight decreased.");
     }
 

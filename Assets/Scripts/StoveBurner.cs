@@ -28,16 +28,16 @@ public class StoveBurner : MonoBehaviour
         {
 
             // Kettle removed → stop burner & fire
+            hasKettle = false;
             burnerOn = false;
             fireArt.SetActive(false);
 
-            if (FireAudio != null && FireAudio.isPlaying) {
+            if (FireAudio != null && FireAudio.isPlaying) 
                 FireAudio.Stop();
 
-                // Kettle removed → freeze temp
-                tempUI.StopHeating();
-                tempUI.HideUI();
-            }
+            // Kettle removed → freeze temp
+            tempUI.StopHeating();
+            tempUI.HideUI();
         }
     }
     public void SetBurnerState(bool on)

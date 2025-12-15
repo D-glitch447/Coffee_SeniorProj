@@ -13,6 +13,16 @@ public class BubbleManager : MonoBehaviour
     public float maxSize = 1.2f;
     public float bubbleLifeTime = 1.0f; // How long they last before popping
 
+    [Header("Bloom Intensity")]
+    public float bloomStartSpawnRate = 0.03f;
+    public float bloomEndSpawnRate = 0.25f;
+
+    public float bloomBurstMultiplier = 6f;
+    public float bloomDecayExponent = 2f;
+
+    // 0 = no bloom, 1 = full bloom
+    private float bloomIntensity = 0f;
+
     // Internal State
     private List<BubbleObj> pool;
     private float spawnTimer;
@@ -24,6 +34,20 @@ public class BubbleManager : MonoBehaviour
         public Transform trans;
         public float timer;
         public Vector3 originalScale;
+    }
+
+    public void SetBloomIntensity(float bloomPercent)
+    {
+        bloomIntensity = Mathf.Clamp01(bloomPercent);
+
+        float shapedIntensity = Mathf.Pow(bloomIntensity, bloomDecayExponent);
+        // Lerp spawn rate based on bloom progress
+        float baseRate = Mathf.Lerp(
+            bloomEndSpawnRate,
+            bloomStartSpawnRate,
+            bloomIntensity
+        );
+        spawnRate = baseRate / Mathf.Lerp(1f, bloomBurstMultiplier, shapedIntensity);
     }
 
     void Start()

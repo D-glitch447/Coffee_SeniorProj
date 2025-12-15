@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: HeatingDialogue
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   messages:
-  - '"Yay you got water, now you have to make it BOIL!!!" '
+  - '"Hey careful, we don''t want to loose our finger afterall"'
   - '"Drag the kettle to one of the stove tops, and click the outermost knob to turn
     up the heat"'
-  - '"Keep track of the therometer to get the accurate temperature"'
-  - '"BEWARE...after you turn off the stove, your water will start to cool down,
-    so will your temperature"'
+  - '"Keep track of the thermometer to get the accurate temperature, and click the
+    knob to turn off the heat"'

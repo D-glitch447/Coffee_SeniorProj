@@ -7,7 +7,7 @@ public class CoffeeBagController : MonoBehaviour
     public GameObject beanPrefab;
 
     [Header("Pour Settings")]
-    public float pourStartAngle = 20f;
+    public float pourStartAngle = 40f;
     public float pourStopAngle = 80f;
     public float minPourRate = 0.6f;
     public float maxPourRate = 0.05f;
@@ -18,7 +18,7 @@ public class CoffeeBagController : MonoBehaviour
     public float visibleZ = 0f;
 
     [Header("Rotation Limits")]
-    public float maxTiltAngle = 85f;   // how far it can tilt
+    public float maxTiltAngle = 95f;   // how far it can tilt
 
 
     [Header("Interaction Settings")]
@@ -192,10 +192,10 @@ public class CoffeeBagController : MonoBehaviour
 
             if (Time.time - lastPourTime > currentRate)
             {
-                if (beanPrefab != null)
+                if (beanPrefab != null) {
                     Instantiate(beanPrefab, pourPoint.position, Quaternion.identity);
-
-                lastPourTime = Time.time;
+                    lastPourTime = Time.time;
+                }
             }
         }
         else
